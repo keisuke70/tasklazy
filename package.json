@@ -1,5 +1,5 @@
 {
-  "name": "y",
+  "name": "tasklazy",
   "private": true,
   "scripts": {
     "build": "turbo build",
