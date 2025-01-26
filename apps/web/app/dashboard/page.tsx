@@ -39,7 +39,7 @@ export const initialCategories: Category[] = [
 ];
 
 // Updated Tasks
-export const initialTasks: Task[] = [
+const initialTasks: Task[] = [
   {
     id: 1,
     text: "Finish project proposal",
