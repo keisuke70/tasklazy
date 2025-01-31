@@ -1,198 +1,125 @@
 "use client";
 
-import { useState } from "react";
-import { TaskInput } from "@/components/TaskInput";
-import { TaskList } from "@/components/TaskList";
-import { DaySelector } from "@/components/DaySelector";
-import { Button } from "@/components/ui/button";
-import { Task, Category } from "@/lib/definition";
-import { SlackIntegration } from "@/components/SlackIntegration";
+import React, { useState } from "react";
+import TaskRegistrationPanel from "@/components/TaskRegistrationPanel";
+import TaskListTable from "@/components/TaskListTable";
+import GenerateScheduleButton from "@/components/GenerateScheduleButton";
+import DailyScheduleView from "@/components/DailyScheduleView";
+import { Task, ScheduledBlock } from "@/lib/definition";
 
-// Example UUIDs for each category (you can generate your own).
-const workCategoryId = "f3f7b915-4b3c-4f5b-a4cc-43bb93cd988a";
-const choresCategoryId = "3947b981-e0af-4421-bfcc-1b3bec6e4470";
-const personalCategoryId = "58aa587c-8b7e-4046-ab08-f5f71975dde8";
+export default function HomePage() {
+  // State for tasks (in a real app, you may fetch this from an API)
+  const [tasks, setTasks] = useState<Task[]>([
+    {
+      id: "1",
+      name: "Finish Project Report",
+      timeRequired: "2h",
+      dueDate: "2025-02-15",
+      repeatRule: "",
+      isComplete: false,
+    },
+    {
+      id: "2",
+      name: "Grocery Shopping",
+      timeRequired: "1h",
+      dueDate: "2025-02-16",
+      reminderTime: "2025-02-15T19:00",
+      isComplete: false,
+    },
+  ]);
 
-// Updated Categories
-export const initialCategories: Category[] = [
-  {
-    id: workCategoryId,
-    name: "Work",
-    color: "bg-blue-100",
-    defaultTime: 60,
-    preferredTime: "morning",
-  },
-  {
-    id: choresCategoryId,
-    name: "Chores",
-    color: "bg-green-100",
-    defaultTime: 30,
-    preferredTime: "noon",
-  },
-  {
-    id: personalCategoryId,
-    name: "Personal",
-    color: "bg-purple-100",
-    defaultTime: 45,
-    preferredTime: "night",
-  },
-];
+  // State for scheduled blocks (could also come from an API)
+  const [scheduledBlocks, setScheduledBlocks] = useState<ScheduledBlock[]>([]);
 
-// Updated Tasks
-const initialTasks: Task[] = [
-  {
-    id: 1,
-    text: "Finish project proposal",
-    timeToComplete: 60,
-    preferredTime: "morning",
-    selectedDates: [],
-    dueDate: new Date("2025-01-15"),
-    recurringSettings: "none",
-    categoryId: workCategoryId,
-  },
-  {
-    id: 2,
-    text: "Schedule team meeting",
-    preferredTime: "morning",
-    selectedDates: [],
-    dueDate: new Date("2025-01-16"),
-    recurringSettings: "weekly",
-    categoryId: workCategoryId,
-  },
-  {
-    id: 3,
-    text: "Do laundry",
-    timeToComplete: 30,
-    preferredTime: "noon",
-    selectedDates: [],
-    dueDate: new Date("2025-01-10"),
-    recurringSettings: "weekly",
-    categoryId: choresCategoryId,
-  },
-  {
-    id: 4,
-    text: "Clean kitchen",
-    timeToComplete: 20,
-    preferredTime: "noon",
-    selectedDates: [],
-    dueDate: null,
-    recurringSettings: "daily",
-    categoryId: choresCategoryId,
-  },
-  {
-    id: 5,
-    text: "Call mom",
-    timeToComplete: 45,
-    preferredTime: "night",
-    selectedDates: [],
-    dueDate: new Date("2025-01-12"),
-    recurringSettings: "weekly",
-    categoryId: personalCategoryId,
-  },
-  {
-    id: 6,
-    text: "Go for a run",
-    timeToComplete: 30,
-    preferredTime: "night",
-    selectedDates: [],
-    dueDate: null,
-    recurringSettings: "daily",
-    categoryId: personalCategoryId,
-  },
-];
-
-const exampleUnrepliedMessages = [
-  {
-    sender: "John",
-    content:
-      "Hey, can you take a look at the code for the user authentication?",
-  },
-  {
-    sender: "Alice",
-    content: "There is a bug in the checkout flow, can you help me fix it?",
-  },
-  {
-    sender: "Bob",
-    content: "What do you think about the new design for the landing page?",
-  },
-];
-
-export default function Dashboard() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [categories, setCategories] = useState<Category[]>(initialCategories);
-
-  const handleAddTasks = async (inputText: string) => {
-    if (!inputText.trim()) return;
-
-    try {
-      const response = await fetch("/api/process-tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ input: inputText }),
-      });
-
-      if (!response.ok) throw new Error("Failed to process tasks");
-
-      const result: Task[] = await response.json();
-      setTasks((prevTasks) => [...prevTasks, ...result]);
-    } catch (error) {
-      console.error("Error submitting tasks:", error);
-    }
+  // Handler: when a user successfully parses+confirms a new task
+  const handleAddTask = (newTask: Task) => {
+    setTasks((prev) => [...prev, newTask]);
   };
 
-  const handleGenerateSchedule = () => {
-    console.log("Generating schedule for:", selectedDate);
-  };
-  const handleDeleteSchedule = () => {
-    console.log("Delete selected schedule", selectedDate);
+  // Handler: when task fields are updated (due date, repeat, etc.)
+  const handleUpdateTask = (updatedTask: Task) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === updatedTask.id ? updatedTask : t))
+    );
   };
 
+  // Handler: toggle task completion
+  const handleToggleComplete = (taskId: string) => {
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === taskId ? { ...t, isComplete: !t.isComplete } : t
+      )
+    );
+  };
+
+  // Handler: assign a priority to a task for scheduling
+  const handleSetPriority = (taskId: string, priority: number) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, priority } : t))
+    );
+  };
+
+  // Handler: Generate Schedule
+  // (In a real app, you'd call /api/generate-schedule, then update state with the response)
+  const handleGenerateSchedule = async () => {
+    // 1. Filter tasks that have priority assigned (not undefined).
+    const prioritizedTasks = tasks.filter(
+      (task) => task.priority !== undefined
+    );
+
+    // 2. Suppose we have a mock function to place them in free slots,
+    // here we'll just simulate:
+    const newScheduledBlocks: ScheduledBlock[] = prioritizedTasks.map(
+      (task) => ({
+        taskId: task.id,
+        priority: task.priority ?? 1,
+        // Example startTime/endTime: assign them all in a row for demonstration
+        startTime: "2025-02-10T09:00",
+        endTime: "2025-02-10T10:00",
+      })
+    );
+    // 3. In reality, you'd:
+    // await fetch("/api/generate-schedule", { method: "POST", body: JSON.stringify(prioritizedTasks) })
+
+    setScheduledBlocks(newScheduledBlocks);
+  };
+
+  // Layout: We'll place the Task List on the left, the schedule on the right
+  // For brevity, we use a simple CSS flex container:
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">TaskLazy Dashboard</h1>
+    <main className="p-4 h-screen">
+      <h1 className="text-2xl font-bold mb-4">My Task Manager</h1>
 
-      <div className="grid grid-cols-10 gap-4 mb-8">
-        <div className="col-span-7 bg-gray-50 p-4 rounded-lg shadow-md">
-          <TaskList
+      <div className="flex gap-8">
+        {/* Left Column: Task List */}
+        <div className="w-3/5">
+          <TaskListTable
             tasks={tasks}
-            setTasks={setTasks}
-            categories={categories}
-            setCategories={setCategories}
-            selectedDate={selectedDate}
+            onUpdateTask={handleUpdateTask}
+            onToggleComplete={handleToggleComplete}
+            onSetPriority={handleSetPriority}
           />
+          <div className="m-8 flex justify-center">
+            <GenerateScheduleButton
+              tasks={tasks}
+              onGenerateSchedule={handleGenerateSchedule}
+            />
+          </div>
+          {/* Registration Panel: add new tasks with AI parse */}
+          <div className="m-6">
+            <TaskRegistrationPanel onAddTask={handleAddTask} />
+          </div>
         </div>
 
-        <div className="col-span-3 flex flex-col bg-gray-100 p-4 rounded-lg shadow-md gap-4">
-          <DaySelector
-            selectedDate={selectedDate}
-            onSelectDate={setSelectedDate}
+        {/* Right Column: Daily Schedule View */}
+        <div className="w-2/5 h-[calc(100dvh-6rem)]">
+          <DailyScheduleView
+            scheduledBlocks={scheduledBlocks}
+            tasks={tasks}
+            // Possibly pass Google Calendar events or handle drag-drop callbacks
           />
-
-          <SlackIntegration unrepliedMessages={exampleUnrepliedMessages} />
         </div>
       </div>
-
-      <div className="px-4 py-2 flex-row space-x-4">
-        <Button
-          onClick={handleGenerateSchedule}
-          className="bg-blue-500 hover:bg-blue-600 text-white"
-        >
-          Generate Schedule
-        </Button>
-        <Button
-          onClick={handleDeleteSchedule}
-          className="bg-red-500 hover:bg-red-600 text-white"
-        >
-          delete selected
-        </Button>
-      </div>
-
-      <div className="bg-white p-4 rounded-lg shadow-md">
-        <TaskInput onAddTasks={handleAddTasks} />
-      </div>
-    </div>
+    </main>
   );
 }
