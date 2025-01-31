@@ -5,7 +5,7 @@ import TaskRegistrationPanel from "@/components/TaskRegistrationPanel";
 import TaskListTable from "@/components/TaskListTable";
 import GenerateScheduleButton from "@/components/GenerateScheduleButton";
 import DailyScheduleView from "@/components/DailyScheduleView";
-import { Task, ScheduledBlock } from "@/lib/definition";
+import { Task, ScheduledBlock, RepeatOption } from "@/lib/definition";
 
 export default function HomePage() {
   // State for tasks (in a real app, you may fetch this from an API)
@@ -13,17 +13,18 @@ export default function HomePage() {
     {
       id: "1",
       name: "Finish Project Report",
-      timeRequired: "2h",
+      duration: 120,
       dueDate: "2025-02-15",
-      repeatRule: "",
+      repeatRule: RepeatOption.None,
       isComplete: false,
     },
     {
       id: "2",
       name: "Grocery Shopping",
-      timeRequired: "1h",
+      duration: 60,
       dueDate: "2025-02-16",
       reminderTime: "2025-02-15T19:00",
+      repeatRule: RepeatOption.None,
       isComplete: false,
     },
   ]);
@@ -92,7 +93,7 @@ export default function HomePage() {
 
       <div className="flex gap-8">
         {/* Left Column: Task List */}
-        <div className="w-3/5">
+        <div className="w-2/3">
           <TaskListTable
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
@@ -112,7 +113,7 @@ export default function HomePage() {
         </div>
 
         {/* Right Column: Daily Schedule View */}
-        <div className="w-2/5 h-[calc(100dvh-6rem)]">
+        <div className="w-1/3 h-[calc(100dvh-6rem)]">
           <DailyScheduleView
             scheduledBlocks={scheduledBlocks}
             tasks={tasks}
