@@ -1,19 +1,27 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { format, isPast } from "date-fns";
+import { format, isPast, parse } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TableCell, TableRow as UiTableRow } from "@/components/ui/table";
 import { Calendar } from "@/components/ui/calendar";
-import { DateTimePicker24h } from "@/components/ui/DateTimePicker";
+import { DateTimePicker24h } from "@/components/ui/DateTimePicker24h";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Task, RepeatOption } from "@/lib/definition";
+import { Bell, CalendarCheck, Clock, Repeat } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface TaskRowInternalProps {
   task: Task;
@@ -31,7 +39,7 @@ export default function TaskRowInternal({
   const [tempTask, setTempTask] = useState<Task>(task);
   const [timePopoverOpen, setTimePopoverOpen] = useState(false);
   const [repeatPopoverOpen, setRepeatPopoverOpen] = useState(false);
-  
+
   useEffect(() => {
     setTempTask(task);
   }, [task]);
@@ -45,6 +53,26 @@ export default function TaskRowInternal({
     onUpdateTask(updated);
   };
 
+  const formatDuration = (minutes?: number) => {
+    if (!minutes) return "-";
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return (
+      [hours > 0 ? `${hours}h` : "", mins > 0 ? `${mins}m` : ""]
+        .filter(Boolean)
+        .join(" ") || "0m"
+    );
+  };
+
+  const formatDateTime = (isoString?: string) => {
+    if (!isoString) return "-";
+    try {
+      return format(new Date(isoString), "MMM d, HH:mm");
+    } catch {
+      return "-";
+    }
+  };
+
   const renderField = (
     field: keyof Task,
     type: "text" | "time" | "date" | "date_time" | "repeat" = "text"
@@ -53,7 +81,8 @@ export default function TaskRowInternal({
 
     if (!editDetails) {
       if (type === "date" && typeof value === "string") {
-        return format(new Date(value), "PP");
+        const dateVal = parse(value as string, "yyyy-MM-dd", new Date());
+        return format(dateVal, "PP");
       }
       if (type === "time" && typeof value === "number") {
         const hours = Math.floor(value / 60);
@@ -72,8 +101,6 @@ export default function TaskRowInternal({
         { value: 5, label: "5m" },
         { value: 10, label: "10m" },
         { value: 15, label: "15m" },
-        { value: 20, label: "20m" },
-        { value: 25, label: "25m" },
         { value: 30, label: "30m" },
         { value: 45, label: "45m" },
         { value: 60, label: "1h" },
@@ -90,12 +117,12 @@ export default function TaskRowInternal({
       const currentMinutes = typeof value === "number" ? value : 0;
       const formattedTime =
         timeOptions.find((opt) => opt.value === currentMinutes)?.label ||
-        "Select time";
+        "-time-";
 
       return (
         <Popover open={timePopoverOpen} onOpenChange={setTimePopoverOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[120px] justify-start">
+            <Button variant="outline" className="w-[90px] justify-center">
               {formattedTime}
             </Button>
           </PopoverTrigger>
@@ -121,13 +148,17 @@ export default function TaskRowInternal({
     }
 
     if (type === "date") {
-      const dateVal = value ? new Date(value as string) : new Date();
-
+      const dateVal = value
+        ? parse(value as string, "yyyy-MM-dd", new Date())
+        : undefined;
       return (
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="mr-2">
-              {format(dateVal, "MMM dd")}
+            <Button
+              variant="outline"
+              className={cn("w-[60px]", !value && "text-muted-foreground")}
+            >
+              {dateVal ? format(dateVal, "MMM dd") : "-Date-"}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
@@ -136,12 +167,10 @@ export default function TaskRowInternal({
               selected={dateVal}
               onSelect={(newDate) => {
                 if (newDate) {
-                  handleFieldChange(
-                    "dueDate",
-                    newDate.toISOString().split("T")[0]
-                  );
+                  handleFieldChange("dueDate", format(newDate, "yyyy-MM-dd"));
                 }
               }}
+              onClear={() => handleFieldChange("dueDate", "")}
               initialFocus
             />
           </PopoverContent>
@@ -176,7 +205,12 @@ export default function TaskRowInternal({
       return (
         <Popover open={repeatPopoverOpen} onOpenChange={setRepeatPopoverOpen}>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="w-[120px] justify-start">
+            <Button
+              variant="outline"
+              className={cn("w-[80px] justify-center", {
+                "text-muted-foreground": currentValue === RepeatOption.None,
+              })}
+            >
               {currentValue}
             </Button>
           </PopoverTrigger>
@@ -204,6 +238,7 @@ export default function TaskRowInternal({
     return (
       <Input
         type="text"
+        className="w-[280px]"
         value={value?.toString() || ""}
         onChange={(e) => handleFieldChange(field, e.target.value)}
       />
@@ -219,11 +254,76 @@ export default function TaskRowInternal({
         />
       </TableCell>
 
-      <TableCell>{renderField("name")}</TableCell>
+      <TableCell className="py-4">
+        <div className="flex justify-between">
+          <span className={cn("font-medium", !editDetails && "p-2")}>
+            {renderField("name")}
+          </span>
+          {!editDetails && (
+            <div className="flex items-center gap-4 text-muted-foreground text-sm">
+              <TooltipProvider>
+                {tempTask.duration && tempTask.duration > 0 && (
+                  <div className="flex items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Clock className="h-4 w-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>Duration</TooltipContent>
+                    </Tooltip>
+                    {formatDuration(tempTask.duration)}
+                  </div>
+                )}
+
+                {tempTask.reminderTime && (
+                  <div className="flex items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Bell className="h-4 w-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>Reminder</TooltipContent>
+                    </Tooltip>
+                    {formatDateTime(tempTask.reminderTime)}
+                  </div>
+                )}
+
+                {tempTask.repeatRule &&
+                  tempTask.repeatRule !== RepeatOption.None && (
+                    <div className="flex items-center gap-1">
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Repeat className="h-4 w-4" />
+                        </TooltipTrigger>
+                        <TooltipContent>Repeat</TooltipContent>
+                      </Tooltip>
+                      {tempTask.repeatRule}
+                    </div>
+                  )}
+
+                {tempTask.dueDate && (
+                  <div className="flex items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <CalendarCheck className="h-4 w-4" />
+                      </TooltipTrigger>
+                      <TooltipContent>Due Date</TooltipContent>
+                    </Tooltip>
+                    {format(
+                      parse(tempTask.dueDate, "yyyy-MM-dd", new Date()),
+                      "MMM d"
+                    )}
+                  </div>
+                )}
+              </TooltipProvider>
+            </div>
+          )}
+        </div>
+      </TableCell>
 
       {editDetails && (
         <>
           <TableCell>{renderField("duration", "time")}</TableCell>
+          <TableCell>{renderField("reminderTime", "date_time")}</TableCell>
+          <TableCell>{renderField("repeatRule", "repeat")}</TableCell>
           <TableCell
             className={
               task.dueDate && isPast(new Date(task.dueDate)) && !task.isComplete
@@ -233,8 +333,6 @@ export default function TaskRowInternal({
           >
             {renderField("dueDate", "date")}
           </TableCell>
-          <TableCell>{renderField("reminderTime", "date_time")}</TableCell>
-          <TableCell>{renderField("repeatRule", "repeat")}</TableCell>
         </>
       )}
 

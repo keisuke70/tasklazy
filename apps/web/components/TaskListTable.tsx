@@ -50,24 +50,24 @@ export default function TaskListTable({
             <TooltipProvider>
               {/* 1. Always-visible columns: Done, Task Name */}
               <UiTableHead className="w-[60px] text-center">Done</UiTableHead>
-              <UiTableHead>Task Name</UiTableHead>
+              <UiTableHead className="min-w-[300px]">Task Name</UiTableHead>
 
               {/* 2. Conditionally visible columns */}
               {editDetails && (
                 <>
-                  <UiTableHead>
+                  <UiTableHead className="w-[80px]">
                     Duration
                     <Clock className="h-4 w-4 ml-2 inline-block" />
                   </UiTableHead>
-                  <UiTableHead>
-                    Due <CalendarCheck className="h-4 w-4 ml-2 inline-block" />
-                  </UiTableHead>
-                  <TableHead>
+                  <TableHead className="w-[160px]">
                     Reminder <Bell className="h-4 w-4 ml-2 inline-block" />
                   </TableHead>
-                  <TableHead>
+                  <TableHead className="w-[120px]">
                     Repeat <Repeat className="h-4 w-4 ml-2 inline-block" />
                   </TableHead>
+                  <UiTableHead className="w-[140px]">
+                    Due <CalendarCheck className="h-4 w-4 ml-2 inline-block" />
+                  </UiTableHead>
                 </>
               )}
 
@@ -87,8 +87,8 @@ export default function TaskListTable({
                   <TooltipContent>
                     <p>
                       {editDetails
-                        ? "Hide Extra Columns"
-                        : "Show Extra Columns"}
+                        ? "Close Edit Mode"
+                        : "Edit Mode"}
                     </p>
                   </TooltipContent>
                 </Tooltip>

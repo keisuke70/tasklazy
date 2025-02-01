@@ -26,10 +26,12 @@ interface DateTimePicker24hProps {
 
 export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const now = new Date();
-  const currentDayStart = startOfDay(now);
-  const currentHour = getHours(now);
-  const currentMinute = getMinutes(now);
+  const [currentTime, setCurrentTime] = React.useState(new Date());
+
+  // Calculate time values once when picker opens
+  const currentDayStart = startOfDay(currentTime);
+  const currentHour = getHours(currentTime);
+  const currentMinute = getMinutes(currentTime);
 
   const disabledDays = (day: Date) => isBefore(day, currentDayStart);
 
@@ -47,15 +49,9 @@ export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     if (!selectedDate) return;
-
-    const newDate = value ? new Date(value) : new Date(selectedDate);
-    newDate.setFullYear(selectedDate.getFullYear());
-    newDate.setMonth(selectedDate.getMonth());
-    newDate.setDate(selectedDate.getDate());
-
+    const newDate = new Date(selectedDate);
     if (isSameDay(newDate, currentDayStart)) {
-      // If selecting today, set to current time or later
-      if (isBefore(newDate, now)) {
+      if (isBefore(newDate, currentTime)) {
         newDate.setHours(currentHour, currentMinute);
       }
     }
@@ -69,17 +65,18 @@ export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
     const newDate = new Date(value);
     newDate.setHours(hours, minutes);
 
-    if (isSameDay(newDate, currentDayStart) && isBefore(newDate, now)) {
+    if (isSameDay(newDate, currentDayStart) && isBefore(newDate, currentTime)) {
       newDate.setHours(currentHour, currentMinute);
     }
 
     onChange?.(newDate);
   };
+
   const handleClear = () => onChange?.(undefined);
 
   const displayLabel = value
     ? format(value, "MMM d, HH:mm")
-    : "Select date/time";
+    : "-Date/Time-";
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -87,7 +84,7 @@ export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
         <Button
           variant="outline"
           className={cn(
-            "w-full justify-start text-left font-500",
+            "justify-center text-left font-500 w-[120px]",
             !value && "text-muted-foreground"
           )}
         >
@@ -108,21 +105,23 @@ export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
                 {Array.from({ length: 24 }, (_, i) => i).map((hour) => {
-                  const isDisabled = value && isHourDisabled(value, hour);
+                  const isDisabled = value ? isHourDisabled(value, hour) : true;
+                  const isSelected = value?.getHours() === hour;
+
                   return (
                     <Button
                       key={hour}
                       size="icon"
-                      variant="ghost"
+                      variant={isSelected ? "default" : "ghost"}
                       className={cn(
                         "sm:w-full shrink-0 aspect-square",
-                        value?.getHours() === hour && "bg-accent",
-                        isDisabled && "text-muted-foreground opacity-50"
+                        isDisabled &&
+                          "text-muted-foreground opacity-50 cursor-not-allowed"
                       )}
                       onClick={() =>
                         handleTimeChange(hour, value?.getMinutes() || 0)
                       }
-                      disabled={!value || isDisabled}
+                      disabled={isDisabled}
                     >
                       {hour}
                     </Button>
@@ -135,22 +134,25 @@ export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
             <ScrollArea className="w-64 sm:w-auto">
               <div className="flex sm:flex-col p-2">
                 {Array.from({ length: 12 }, (_, i) => i * 5).map((minute) => {
-                  const isDisabled =
-                    value && isMinuteDisabled(value, value.getHours(), minute);
+                  const isDisabled = value
+                    ? isMinuteDisabled(value, value.getHours(), minute)
+                    : true;
+                  const isSelected = value?.getMinutes() === minute;
+
                   return (
                     <Button
                       key={minute}
                       size="icon"
-                      variant="ghost"
+                      variant={isSelected ? "default" : "ghost"}
                       className={cn(
                         "sm:w-full shrink-0 aspect-square",
-                        value?.getMinutes() === minute && "bg-accent",
-                        isDisabled && "text-muted-foreground opacity-50"
+                        isDisabled &&
+                          "text-muted-foreground opacity-50 cursor-not-allowed"
                       )}
                       onClick={() =>
                         handleTimeChange(value?.getHours() || 0, minute)
                       }
-                      disabled={!value || isDisabled}
+                      disabled={isDisabled}
                     >
                       {minute.toString().padStart(2, "0")}
                     </Button>
