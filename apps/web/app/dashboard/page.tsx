@@ -53,44 +53,65 @@ export default function HomePage() {
     );
   };
 
-  // Handler: assign a priority to a task for scheduling
-  const handleSetPriority = (taskId: string, priority: number) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, priority } : t))
-    );
+  const handleSetPriority = (taskId: string, newPriority?: number) => {
+    setTasks((prevTasks) => {
+      const targetTask = prevTasks.find((t) => t.id === taskId);
+      if (!targetTask) return prevTasks;
+
+      if (newPriority === undefined) {
+        // Deselect: remove priority and adjust ordering.
+        const oldPriority = targetTask.priority;
+        if (oldPriority === undefined) return prevTasks;
+        return prevTasks.map((t) => {
+          if (t.id === taskId) {
+            return { ...t, priority: undefined };
+          }
+          if (t.priority !== undefined && t.priority > oldPriority) {
+            // Decrement priority for tasks that were selected later.
+            return { ...t, priority: t.priority - 1 };
+          }
+          return t;
+        });
+      } else {
+        // Select: assign a new priority based on the count of already selected tasks.
+        const selectedCount = prevTasks.filter(
+          (t) => t.priority !== undefined
+        ).length;
+        const assignedPriority = selectedCount + 1;
+        return prevTasks.map((t) =>
+          t.id === taskId ? { ...t, priority: assignedPriority } : t
+        );
+      }
+    });
   };
 
   // Handler: Generate Schedule
   // (In a real app, you'd call /api/generate-schedule, then update state with the response)
   const handleGenerateSchedule = async () => {
-    // 1. Filter tasks that have priority assigned (not undefined).
+    // 1. Filter tasks that have priority assigned (i.e. not undefined).
     const prioritizedTasks = tasks.filter(
       (task) => task.priority !== undefined
     );
 
-    // 2. Suppose we have a mock function to place them in free slots,
-    // here we'll just simulate:
+    // 2. Here we simulate generating scheduled blocks for the prioritized tasks.
     const newScheduledBlocks: ScheduledBlock[] = prioritizedTasks.map(
       (task) => ({
         taskId: task.id,
         priority: task.priority ?? 1,
-        // Example startTime/endTime: assign them all in a row for demonstration
+        // Example startTime/endTime: assign them all in a row for demonstration.
         startTime: "2025-02-10T09:00",
         endTime: "2025-02-10T10:00",
       })
     );
-    // 3. In reality, you'd:
+    // 3. In a real implementation you might:
     // await fetch("/api/generate-schedule", { method: "POST", body: JSON.stringify(prioritizedTasks) })
-
     setScheduledBlocks(newScheduledBlocks);
   };
 
-  // Layout: We'll place the Task List on the left, the schedule on the right
-  // For brevity, we use a simple CSS flex container:
+  // Layout: We'll place the Task List on the left and the Schedule view on the right.
+
   return (
     <main className="p-4 h-screen">
-      <h1 className="text-2xl font-bold mb-4">My Task Manager</h1>
-
       <div className="flex gap-8">
         {/* Left Column: Task List */}
         <div className="w-2/3">
@@ -114,11 +135,7 @@ export default function HomePage() {
 
         {/* Right Column: Daily Schedule View */}
         <div className="w-1/3 h-[calc(100dvh-6rem)]">
-          <DailyScheduleView
-            scheduledBlocks={scheduledBlocks}
-            tasks={tasks}
-            // Possibly pass Google Calendar events or handle drag-drop callbacks
-          />
+          <DailyScheduleView scheduledBlocks={scheduledBlocks} tasks={tasks} />
         </div>
       </div>
     </main>
