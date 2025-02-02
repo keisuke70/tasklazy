@@ -112,7 +112,7 @@ export default function HomePage() {
 
   return (
     <div className="flex p-4 pt-10 gap-8 h-full">
-      <div className="flex-[5_5_0%] overflow-auto">
+      <div className="flex-[8_8_0%] overflow-auto">
         <div className="m-6">
           <TaskRegistrationPanel onAddTask={handleAddTask} />
         </div>

@@ -13,7 +13,7 @@ export default function DashboardLayout({
       <TaskManagementSidebar />
       {/* Main container */}
       <div className="flex-1 flex flex-col relative h-screen overflow-hidden">
-        <SidebarTrigger className="absolute top-4 left-4 z-20">
+        <SidebarTrigger className="absolute top-7 left-4 z-20">
           <Menu className="h-6 w-6" />
         </SidebarTrigger>
         <main className="w-full h-full p-5">{children}</main>
