@@ -17,7 +17,8 @@
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
         "hashicorp.terraform",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "saoudrizwan.claude-dev"
       ]
     }
   },

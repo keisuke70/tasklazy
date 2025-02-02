@@ -111,33 +111,29 @@ export default function HomePage() {
   // Layout: We'll place the Task List on the left and the Schedule view on the right.
 
   return (
-    <main className="p-4 h-screen">
-      <div className="flex gap-8">
-        {/* Left Column: Task List */}
-        <div className="w-2/3">
-          <TaskListTable
-            tasks={tasks}
-            onUpdateTask={handleUpdateTask}
-            onToggleComplete={handleToggleComplete}
-            onSetPriority={handleSetPriority}
-          />
-          <div className="m-8 flex justify-center">
-            <GenerateScheduleButton
-              tasks={tasks}
-              onGenerateSchedule={handleGenerateSchedule}
-            />
-          </div>
-          {/* Registration Panel: add new tasks with AI parse */}
-          <div className="m-6">
-            <TaskRegistrationPanel onAddTask={handleAddTask} />
-          </div>
+    <div className="flex p-4 pt-10 gap-8 h-full">
+      <div className="flex-[5_5_0%] overflow-auto">
+        <div className="m-6">
+          <TaskRegistrationPanel onAddTask={handleAddTask} />
         </div>
-
-        {/* Right Column: Daily Schedule View */}
-        <div className="w-1/3 h-[calc(100dvh-6rem)]">
-          <DailyScheduleView scheduledBlocks={scheduledBlocks} tasks={tasks} />
+        <TaskListTable
+          tasks={tasks}
+          onUpdateTask={handleUpdateTask}
+          onToggleComplete={handleToggleComplete}
+          onSetPriority={handleSetPriority}
+        />
+        <div className="m-8 flex justify-center">
+          <GenerateScheduleButton
+            tasks={tasks}
+            onGenerateSchedule={handleGenerateSchedule}
+          />
         </div>
       </div>
-    </main>
+
+      {/* Right Column: Daily Schedule View – flex-grow factor of 1 */}
+      <div className="flex-[3_3_0%] overflow-auto">
+        <DailyScheduleView scheduledBlocks={scheduledBlocks} tasks={tasks} />
+      </div>
+    </div>
   );
 }

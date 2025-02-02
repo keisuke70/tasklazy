@@ -1,4 +1,5 @@
 "use client";
+
 import { Home, Archive, Settings } from "lucide-react";
 import {
   Sidebar,
@@ -9,28 +10,29 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { UserProfile } from "./user-profile";
 
 const menuItems = [
-  { name: "Home", icon: Home },
-  { name: "Archived", icon: Archive },
-  { name: "Settings", icon: Settings },
+  { name: "Home", icon: Home, href: "/dashboard" },
+  { name: "Archived", icon: Archive, href: "/dashboard/archived" },
+  { name: "Settings", icon: Settings, href: "/dashboard/setting" },
 ];
 
 export function TaskManagementSidebar() {
   return (
-    <Sidebar className="border-r border-accent/10">
-      <SidebarHeader className="border-b border-accent/10 p-4">
+    <Sidebar className="bg-background text-text border-r border-accent h-full">
+      <SidebarHeader className="p-4 border-b border-accent">
         <h1 className="text-2xl font-bold text-primary">TaskLazy</h1>
       </SidebarHeader>
       <SidebarContent className="p-4">
-        <SidebarMenu>
+        <SidebarMenu className="flex flex-col space-y-4">
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton
                 asChild
-                className="flex items-center gap-2 text-text hover:bg-primary/10"
+                className="flex items-center gap-3 w-full p-3 rounded-md transition-colors duration-200 hover:bg-primary hover:text-white"
               >
-                <a href={`/${item.name.toLowerCase()}`}>
+                <a href={item.href}>
                   <item.icon className="h-5 w-5" />
                   <span>{item.name}</span>
                 </a>
@@ -39,8 +41,8 @@ export function TaskManagementSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        <p className="text-sm text-text/60">© 2025 TaskLazy</p>
+      <SidebarFooter className="p-4 border-t border-accent">
+        <UserProfile />
       </SidebarFooter>
     </Sidebar>
   );
