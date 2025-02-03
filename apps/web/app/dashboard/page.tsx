@@ -1,60 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TaskRegistrationPanel from "@/components/TaskRegistrationPanel";
 import TaskListTable from "@/components/TaskListTable";
 import GenerateScheduleButton from "@/components/GenerateScheduleButton";
 import DailyScheduleView from "@/components/DailyScheduleView";
 import { Task, ScheduledBlock, RepeatOption } from "@/lib/definition";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function HomePage() {
   // State for tasks (in a real app, you may fetch this from an API)
-    const [tasks, setTasks] = useState<Task[]>([
-      {
-        id: "task1",
-        name: "Finish Project Report",
-        duration: 45, // 08:00 - 08:45
-        dueDate: "2025-02-15",
-        repeatRule: RepeatOption.None,
-        isComplete: false,
-      },
-      {
-        id: "task2",
-        name: "Grocery Shopping",
-        duration: 30, // 08:45 - 09:15
-        dueDate: "2025-02-16",
-        repeatRule: RepeatOption.None,
-        isComplete: false,
-      },
-      {
-        id: "task3",
-        name: "Call Client",
-        duration: 45, // 09:15 - 10:00
-        dueDate: "2025-02-16",
-        repeatRule: RepeatOption.None,
-        isComplete: false,
-      },
-      {
-        id: "task4",
-        name: "Team Meeting",
-        duration: 90, // 10:00 - 11:30
-        dueDate: "2025-02-17",
-        repeatRule: RepeatOption.None,
-        isComplete: false,
-      },
-      {
-        id: "task5",
-        name: "Quick Email Check",
-        duration: 30, // 11:30 - 12:00
-        dueDate: "2025-02-15",
-        repeatRule: RepeatOption.None,
-        isComplete: false,
-      },
-    ]);
+  const [tasks, setTasks] = useState<Task[]>([
+    {
+      id: "task1",
+      name: "Finish Project Report",
+      duration: 45, // 08:00 - 08:45
+      dueDate: "2025-02-15",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
+    {
+      id: "task2",
+      name: "Grocery Shopping",
+      duration: 60, // 08:45 - 09:15
+      dueDate: "2025-02-16",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
+    {
+      id: "task3",
+      name: "Call Client",
+      duration: 45, // 09:15 - 10:00
+      dueDate: "2025-02-16",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
+    {
+      id: "task4",
+      name: "Team Meeting",
+      duration: 90, // 10:00 - 11:30
+      dueDate: "2025-02-17",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
+    {
+      id: "task5",
+      name: "Quick Email Check",
+      duration: 30, // 11:30 - 12:00
+      dueDate: "2025-02-15",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
+  ]);
 
   // State for scheduled blocks (could also come from an API)
   const [scheduledBlocks, setScheduledBlocks] = useState<ScheduledBlock[]>([]);
+  const { setOpen } = useSidebar();
+  const [editDetails, setEditDetails] = useState(false);
 
+  useEffect(() => {
+    if (editDetails) {
+      // Close the sidebar when editDetails is true
+      setOpen(false);
+    }
+  }, [editDetails, setOpen]);
   // Handler: when a user successfully parses+confirms a new task
   const handleAddTask = (newTask: Task) => {
     setTasks((prev) => [...prev, newTask]);
@@ -132,31 +141,26 @@ export default function HomePage() {
         taskId: "task1",
         priority: 1,
         startTime: "08:00",
-        endTime: "08:45", // Task spans 45 minutes.
       },
       {
         taskId: "task2",
         priority: 2,
         startTime: "08:45",
-        endTime: "09:15", // Starts exactly when task1 ends.
       },
       {
         taskId: "task3",
         priority: 3,
         startTime: "09:15",
-        endTime: "10:00", // Spans almost an hour.
       },
       {
         taskId: "task4",
         priority: 4,
         startTime: "10:00",
-        endTime: "11:30", // Spans multiple hours.
       },
       {
         taskId: "task5",
         priority: 5,
         startTime: "11:30",
-        endTime: "12:00", // Ends at the half-hour.
       },
     ];
 
@@ -165,20 +169,33 @@ export default function HomePage() {
     setScheduledBlocks(newScheduledBlocks);
   };
 
+  /**
+   * 1. The function that updates a block's `startTime` when dragged-and-dropped.
+   *    `taskId` is the block's ID, `newStartTime` is the new "HH:mm".
+   */
+  const handleTaskMove = (taskId: string, newStartTime: string) => {
+    setScheduledBlocks((prevBlocks) =>
+      prevBlocks.map((block) =>
+        block.taskId === taskId ? { ...block, startTime: newStartTime } : block
+      )
+    );
+  };
   // Layout: We'll place the Task List on the left and the Schedule view on the right.
 
   return (
-    <div className="flex pt-10 gap-8 h-full">
-      <div className="flex-[3_3_0%]">
-        <div className="m-6">
+    <div className="flex pt-5 gap-8 h-full w-full">
+      <div className="w-2/3">
+        <div className="mb-5">
           <TaskRegistrationPanel onAddTask={handleAddTask} />
         </div>
-        <div className="h-1/2">
+        <div className="pl-5 h-2/3 overflow-auto">
           <TaskListTable
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
             onToggleComplete={handleToggleComplete}
             onSetPriority={handleSetPriority}
+            editDetails={editDetails}
+            setEditDetails={setEditDetails}
           />
         </div>
         <div className="m-8 flex justify-center">
@@ -190,8 +207,12 @@ export default function HomePage() {
       </div>
 
       {/* Right Column: Daily Schedule View – flex-grow factor of 1 */}
-      <div className="flex-[1_1_0%]">
-        <DailyScheduleView scheduledBlocks={scheduledBlocks} tasks={tasks} />
+      <div className="w-1/3">
+        <DailyScheduleView
+          scheduledBlocks={scheduledBlocks}
+          tasks={tasks}
+          onTaskMove={handleTaskMove}
+        />
       </div>
     </div>
   );

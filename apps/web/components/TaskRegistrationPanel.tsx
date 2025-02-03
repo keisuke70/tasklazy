@@ -116,7 +116,7 @@ export default function TaskRegistrationPanel({
 
   return (
     <Card className="w-full max-w-md mx-auto">
-      <CardContent className="p-6">
+      <CardContent className="p-4">
         {/* First form: the user’s raw input to parse */}
         <form
           onSubmit={(e) => {
@@ -136,7 +136,7 @@ export default function TaskRegistrationPanel({
               <Mic className="h-4 w-4" />
             </Button>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full h-8" disabled={isLoading}>
             {isLoading ? "Processing..." : "Add Task"}
           </Button>
         </form>

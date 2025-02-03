@@ -26,6 +26,8 @@ interface TaskListTableProps {
   onToggleComplete: (taskId: string) => void;
   // Updated to allow clearing the priority by passing undefined.
   onSetPriority: (taskId: string, priority?: number) => void;
+  editDetails: boolean;
+  setEditDetails: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function TaskListTable({
@@ -33,14 +35,15 @@ export default function TaskListTable({
   onUpdateTask,
   onToggleComplete,
   onSetPriority,
+  editDetails,
+  setEditDetails,
 }: TaskListTableProps) {
-  const [editDetails, setEditDetails] = useState(false);
+
   const toggleColumns = () => {
     setEditDetails((prev) => !prev);
   };
-
   return (
-    <div className="w-full h-full overflow-auto relative">
+    <div className="h-full w-auto overflow-auto relative">
       <Table className="relative">
         {/* TABLE HEADER */}
         <TableHeader className="sticky top-0 bg-white z-10">

@@ -73,7 +73,6 @@ export function DateTimePicker24h({ value, onChange }: DateTimePicker24hProps) {
   };
 
   const handleClear = () => onChange?.(undefined);
-
   const displayLabel = value
     ? format(value, "MMM d, HH:mm")
     : "-Date/Time-";

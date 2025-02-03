@@ -4,33 +4,22 @@ import React, { useState } from "react";
 import { Task, ScheduledBlock } from "@/lib/definition";
 import ScheduleBlock from "./ScheduleBlock";
 
-// (Optional) If you have events from Google Calendar or other sources:
 interface FixedEvent {
   id: string;
   name: string;
-  startTime: string; // e.g., "09:00" in "HH:mm" format
-  endTime: string; // e.g., "10:00" in "HH:mm" format
+  startTime: string; // e.g., "09:15" in "HH:mm" format
+  endTime: string; // e.g., "10:00"
 }
 
 interface DailyScheduleViewProps {
-  /** All tasks in the system; used to find task names etc. */
   tasks: Task[];
-
-  /** The scheduled blocks for the day, containing priority + time slots. */
   scheduledBlocks: ScheduledBlock[];
-
-  /** Optional external events (fixed) that should appear on the timeline. */
   fixedEvents?: FixedEvent[];
-
-  /**
-   * Called when a user drags-and-drops a scheduled task
-   * to a new time slot.
-   */
   onTaskMove?: (taskId: string, newStartTime: string) => void;
 }
 
-// Example hour-only time slots. You can add half-hours if desired.
-const timeSlots = [
+// Each hour cell is labeled but has 56px in height for the 60 minutes.
+const displayTimeSlots = [
   "06:00",
   "07:00",
   "08:00",
@@ -50,6 +39,18 @@ const timeSlots = [
   "22:00",
 ];
 
+/** Convert "HH:mm" to {hour, minute}. */
+function parseTime(timeStr: string) {
+  const [hourStr, minuteStr] = timeStr.split(":").map((x) => x.trim());
+  return {
+    hour: Number(hourStr),
+    minute: Number(minuteStr),
+  };
+}
+
+/** The height for each hour cell in pixels. */
+const CELL_HEIGHT_PX = 60;
+
 export default function DailyScheduleView({
   tasks,
   scheduledBlocks,
@@ -58,97 +59,120 @@ export default function DailyScheduleView({
 }: DailyScheduleViewProps) {
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
 
-  // Allow drop on time-slot divs
+  // Allows drop on hour cell.
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
-  // When a block is dropped onto a time slot
-  const handleDrop = (e: React.DragEvent, timeSlot: string) => {
+  // When dropping onto an hour cell, you could snap to that hour or do a finer calculation.
+  const handleDrop = (e: React.DragEvent, cellHour: string) => {
     e.preventDefault();
     const droppedTaskId = e.dataTransfer.getData("text/plain");
     if (!droppedTaskId || !onTaskMove) return;
 
-    // If you want to prevent overlap with fixed events, check here:
-    const overlap = fixedEvents.some((ev) => ev.startTime === timeSlot);
-    if (overlap) {
-      alert("Cannot move task: Overlaps with a fixed event");
-      return;
-    }
-
-    // Notify the parent that the block was moved
-    onTaskMove(droppedTaskId, timeSlot);
+    // Example: Snap to the top of that hour cell if you want (06:00, 07:00, etc.)
+    // Or you could look at the mouse position to decide the nearest 15-min mark.
+    onTaskMove(droppedTaskId, cellHour);
     setDraggedTaskId(null);
   };
 
-  // Optionally combine your "HH:mm" with a date (like "2025-02-10T" + timeSlot)
-  // if you're doing multi-day scheduling. For MVP, we keep it simple.
-  const asDateTime = (timeSlot: string) => {
-    return timeSlot; // or e.g. `"2025-02-10T${timeSlot}:00"`
-  };
-
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg h-full overflow-auto border-2 border-gray-300">
+    <div className="bg-white p-4 rounded-lg shadow-lg h-full overflow-x-hidden border-2 border-gray-300">
       <h2 className="text-xl font-semibold mb-4">Today’s Schedule</h2>
       <div className="grid grid-cols-[auto_1fr] gap-2">
-        {timeSlots.map((timeSlot) => {
-          const slotDateTime = asDateTime(timeSlot);
+        {displayTimeSlots.map((timeSlot) => {
+          const { hour: cellHour } = parseTime(timeSlot);
 
-          // Blocks scheduled to start exactly at slotDateTime (e.g., "09:00")
-          const slotBlocks = scheduledBlocks.filter(
-            (b) => b.startTime === slotDateTime
-          );
+          // Filter blocks whose startTime is in this hour.
+          const blocksInCell = scheduledBlocks.filter((block) => {
+            const { hour } = parseTime(block.startTime);
 
-          // Fixed events that start at the same time
-          const slotFixed = fixedEvents.filter(
-            (ev) => ev.startTime === slotDateTime
-          );
+            return hour === cellHour;
+          });
+
+          // Filter fixed events that start in this hour (if you still need them).
+          const fixedInCell = fixedEvents.filter((ev) => {
+            const { hour } = parseTime(ev.startTime);
+            return hour === cellHour;
+          });
 
           return (
             <React.Fragment key={timeSlot}>
-              {/* Left-side label (the hour) */}
+              {/* Left-side label for the hour */}
               <div className="text-right pr-2 py-2 text-sm text-gray-600 w-16">
                 {timeSlot}
               </div>
 
-              {/* Right-side slot container */}
+              {/* The hour cell. We place tasks absolutely within it. */}
               <div
-                className="border-t border-gray-200 relative h-14"
+                className="border-t border-gray-200 relative top-4"
+                style={{ height: CELL_HEIGHT_PX }}
                 onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, slotDateTime)}
+                onDrop={(e) => handleDrop(e, timeSlot)}
               >
-                {/* Render each scheduled block that starts at this time */}
-                {slotBlocks.map((block) => {
-                  // Find the matching Task to display name, etc.
+                {blocksInCell.map((block) => {
+                  // Find this task's duration so we can compute height.
                   const foundTask = tasks.find((t) => t.id === block.taskId);
                   if (!foundTask) return null;
 
+                  const { minute: startMinute } = parseTime(block.startTime);
+
+                  // Convert the start minute into a top offset in px.
+                  const topOffsetPx = (startMinute / 60) * CELL_HEIGHT_PX;
+                  // Convert duration into a block height in px.
+                  const blockHeightPx =
+                    (foundTask.duration / 60) * CELL_HEIGHT_PX + 5;
+
                   return (
-                    <ScheduleBlock
-                      key={block.taskId}
-                      taskId={block.taskId}
-                      taskName={foundTask.name}
-                      priority={block.priority}
-                      startTime={block.startTime}
-                      endTime={block.endTime}
-                      // Called by the block on drag start
-                      onBlockMoveStart={(id) => setDraggedTaskId(id)}
-                      // Called if you want to handle drop logic from the block
-                      // or do nothing, if you handle it all in handleDrop
-                      onBlockMoveEnd={onTaskMove}
-                    />
+                    <div
+                      key={`${block.taskId}-${block.startTime}`}
+                      style={{
+                        position: "absolute",
+                        top: topOffsetPx,
+                        height: blockHeightPx,
+                        width: "100%",
+                      }}
+                    >
+                      <ScheduleBlock
+                        taskId={block.taskId}
+                        taskName={foundTask.name}
+                        priority={block.priority}
+                        startTime={block.startTime}
+                        duration={foundTask.duration}
+                        onBlockMoveStart={(id) => setDraggedTaskId(id)}
+                        style={{
+                          position: "absolute",
+                          height: blockHeightPx,
+                          width: "100%",
+                        }}
+                      />
+                    </div>
                   );
                 })}
 
-                {/* Render any fixed events at this time */}
-                {slotFixed.map((ev) => (
-                  <div
-                    key={ev.id}
-                    className="absolute inset-y-0 left-2 right-2 bg-gray-300 text-sm p-1 rounded flex items-center justify-center"
-                  >
-                    <span className="text-gray-800 font-medium">{ev.name}</span>
-                  </div>
-                ))}
+                {fixedInCell.map((ev) => {
+                  // Example: if each fixed event is always 15 minutes:
+                  const { minute: evStartMin } = parseTime(ev.startTime);
+                  const topOffsetPx = (evStartMin / 60) * CELL_HEIGHT_PX;
+                  const eventHeightPx = (15 / 60) * CELL_HEIGHT_PX;
+
+                  return (
+                    <div
+                      key={ev.id}
+                      style={{
+                        position: "absolute",
+                        top: topOffsetPx,
+                        height: eventHeightPx,
+                        width: "100%",
+                      }}
+                      className="bg-gray-300 text-sm p-1 rounded flex items-center justify-center"
+                    >
+                      <span className="text-gray-800 font-medium">
+                        {ev.name}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </React.Fragment>
           );

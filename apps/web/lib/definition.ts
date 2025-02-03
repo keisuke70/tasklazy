@@ -1,7 +1,7 @@
 export interface Task {
   id: string;
   name: string;
-  duration?: number; // Changed to number (minutes)
+  duration: number; // Changed to number (minutes)
   dueDate?: string; // ISO date string (YYYY-MM-DD)
   reminderTime?: string; // ISO datetime string
   repeatRule: RepeatOption;
@@ -12,8 +12,7 @@ export interface Task {
 export interface ScheduledBlock {
   taskId: string;
   priority: number;
-  startTime: string; // e.g. "09:00"
-  endTime: string; // e.g. "10:00"
+  startTime: string;
 }
 
 export enum RepeatOption {
