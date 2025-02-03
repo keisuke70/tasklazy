@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { format, isPast } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow as UiTableRow } from "@/components/ui/table";
-import { Task, RepeatOption } from "@/lib/definition";
+import { Task} from "@/lib/definition";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TaskNameCell from "./TaskNameCell";
 import TaskIcons from "./TaskIcons";

@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TaskListTableProps {
   tasks: Task[];
@@ -33,31 +34,24 @@ export default function TaskListTable({
   onToggleComplete,
   onSetPriority,
 }: TaskListTableProps) {
-  // Controls whether we show extra columns (edit mode)
   const [editDetails, setEditDetails] = useState(false);
-
-  // Toggles the extra columns
   const toggleColumns = () => {
     setEditDetails((prev) => !prev);
   };
 
   return (
-    <div className="w-full overflow-x-auto">
-      <Table>
+    <div className="w-full h-full overflow-auto relative">
+      <Table className="relative">
         {/* TABLE HEADER */}
-        <TableHeader>
+        <TableHeader className="sticky top-0 bg-white z-10">
           <UiTableRow>
             <TooltipProvider>
-              {/* Always-visible columns: Done, Task Name */}
               <UiTableHead className="w-[60px] text-center">Done</UiTableHead>
-              <UiTableHead className="min-w-[300px]">Task Name</UiTableHead>
-
-              {/* Conditionally visible columns */}
+              <UiTableHead className="min-w-[250px]">Task Name</UiTableHead>
               {editDetails && (
                 <>
                   <UiTableHead className="w-[80px]">
-                    Duration
-                    <Clock className="h-4 w-4 ml-2 inline-block" />
+                    Duration <Clock className="h-4 w-4 ml-2 inline-block" />
                   </UiTableHead>
                   <UiTableHead className="w-[160px]">
                     Reminder <Bell className="h-4 w-4 ml-2 inline-block" />
@@ -70,7 +64,6 @@ export default function TaskListTable({
                   </UiTableHead>
                 </>
               )}
-
               <UiTableHead className="w-[60px] text-center">
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -91,7 +84,6 @@ export default function TaskListTable({
           </UiTableRow>
         </TableHeader>
 
-        {/* TABLE BODY */}
         <TableBody>
           {tasks.map((task) => (
             <TaskRow
