@@ -43,7 +43,7 @@ export default function TaskListTable({
   return (
     <div
       className={cn(
-        "h-full overflow-auto relative mt-2 ml-3 border border-accent rounded-lg",
+        "h-full overflow-auto relative mt-2 ml-10 border border-accent rounded-sm",
         {
           "ml-16": !editDetails,
         }

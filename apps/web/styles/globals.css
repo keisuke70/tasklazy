@@ -22,7 +22,7 @@ body {
     --accent: 89 38% 72%;
     
     ::-webkit-scrollbar {
-      width: 13px;
+      width: 10px;
     }
 
     /* Track */
@@ -32,7 +32,7 @@ body {
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-      background: #dbdddb;
+      background: #c1c9c1;
       border-radius: 5px;
     }
 

@@ -51,6 +51,22 @@ export default function HomePage() {
       repeatRule: RepeatOption.None,
       isComplete: false,
     },
+    {
+      id: "task6",
+      name: "Quick Email Check",
+      duration: 30, // 11:30 - 12:00
+      dueDate: "2025-02-15",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
+    {
+      id: "task7",
+      name: "Quick Email Check",
+      duration: 30, // 11:30 - 12:00
+      dueDate: "2025-02-15",
+      repeatRule: RepeatOption.None,
+      isComplete: false,
+    },
   ]);
 
   // State for scheduled blocks (could also come from an API)
@@ -183,9 +199,9 @@ export default function HomePage() {
   // Layout: We'll place the Task List on the left and the Schedule view on the right.
 
   return (
-    <div className="flex pt-8 gap-8 h-full w-full">
-      <div className="w-4/6">
-        <div className="pl-5 max-h-3/4 overflow-auto">
+    <div className="flex pt-5 gap-8 h-full w-full">
+      <div className="w-4/6 h-full">
+        <div className="pl-5 h-4/5">
           <TaskListTable
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
@@ -196,7 +212,7 @@ export default function HomePage() {
           />
         </div>
         <div className="flex justify-center mt-5">
-          <div className="w-full ml-24">
+          <div className="w-full ml-20">
             <TaskRegistrationPanel onAddTask={handleAddTask} />
           </div>
           <div className="ml-3 mt-1">
@@ -209,7 +225,7 @@ export default function HomePage() {
       </div>
 
       {/* Right Column: Daily Schedule View – flex-grow factor of 1 */}
-      <div className="w-2/6">
+      <div className="w-2/6 p-2 mb-5">
         <DailyScheduleView
           scheduledBlocks={scheduledBlocks}
           tasks={tasks}

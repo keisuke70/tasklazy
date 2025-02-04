@@ -68,6 +68,7 @@ export default function TaskRow({
         <Checkbox
           checked={task.isComplete}
           onCheckedChange={() => onToggleComplete(task.id)}
+          className="ml-3"
         />
       </TableCell>
 

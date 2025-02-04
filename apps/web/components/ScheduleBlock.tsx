@@ -111,13 +111,8 @@ const ScheduleBlock: React.FC<ScheduleBlockProps> = ({
             className="bg-white p-2 rounded shadow-lg z-50"
             sideOffset={5}
           >
-            <p className="font-semibold">{taskName}</p>
-            <p>Priority: {priority}</p>
-            <p>
-              Start: {startTime} <br />
-              End: {endTime} <br />
-              Duration: {duration} min
-            </p>
+            <p className="font-semibold text-[10px]">{taskName}</p>
+            <p className="text-[9px]">Priority: {priority}, Duration: {duration} min</p>
             <Tooltip.Arrow className="fill-white" />
           </Tooltip.Content>
         </Tooltip.Portal>
