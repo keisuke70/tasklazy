@@ -3,17 +3,13 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic } from "lucide-react";
+import { Mic, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "@/hooks/use-toast";
 import { Task } from "@/lib/definition";
 
-/**
- * ParsedTask is the shape returned by /api/parse-task.
- * It may be partial or slightly different from our Task interface.
- */
 interface ParsedTask {
   taskName: string;
   dueDate: string;
@@ -21,14 +17,7 @@ interface ParsedTask {
   repeatRule: string;
 }
 
-/**
- * Props for TaskRegistrationPanel
- */
 interface TaskRegistrationPanelProps {
-  /**
-   * Called after the server successfully creates the task,
-   * allowing the parent to add it to state.
-   */
   onAddTask: (newTask: Task) => void;
 }
 
@@ -39,13 +28,11 @@ export default function TaskRegistrationPanel({
   const [parsedTask, setParsedTask] = useState<ParsedTask | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // react-hook-form to handle the final confirmation fields
   const { register, handleSubmit, reset } = useForm<ParsedTask>();
 
-  /**
-   * Step 1: Parse the user’s input by calling /api/parse-task
-   */
   const handleParseTask = async () => {
+    if (!taskInput.trim()) return;
+
     setIsLoading(true);
     try {
       const response = await fetch("/api/parse-task", {
@@ -70,14 +57,9 @@ export default function TaskRegistrationPanel({
     }
   };
 
-  /**
-   * Step 2: Confirm the parsed data and create the new task via /api/tasks
-   * Then call onAddTask with the server’s response (which we assume is a Task).
-   */
   const onSubmit = async (data: ParsedTask) => {
     setIsLoading(true);
     try {
-      // Send the parsed/confirmed data to create the task
       const response = await fetch("/api/tasks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -87,10 +69,7 @@ export default function TaskRegistrationPanel({
         throw new Error("Failed to create task");
       }
 
-      // Assume the server returns a Task object that matches our interface
       const createdTask = (await response.json()) as Task;
-
-      // Pass the new task up to the parent
       onAddTask(createdTask);
 
       toast({
@@ -98,7 +77,6 @@ export default function TaskRegistrationPanel({
         description: "Task created successfully!",
       });
 
-      // Reset local states
       setTaskInput("");
       setParsedTask(null);
       reset();
@@ -115,9 +93,9 @@ export default function TaskRegistrationPanel({
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full mx-auto">
       <CardContent className="p-4">
-        {/* First form: the user’s raw input to parse */}
+        {/* First form: raw input + parse */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -132,13 +110,19 @@ export default function TaskRegistrationPanel({
               placeholder="Enter your task..."
               className="flex-grow"
             />
-            <Button type="button" size="icon" variant="outline">
-              <Mic className="h-4 w-4" />
+            <Button
+              type="submit"
+              size="icon"
+              variant="outline"
+              disabled={isLoading}
+            >
+              {taskInput.trim().length === 0 ? (
+                <Mic className="h-4 w-4" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
             </Button>
           </div>
-          <Button type="submit" className="w-full h-8" disabled={isLoading}>
-            {isLoading ? "Processing..." : "Add Task"}
-          </Button>
         </form>
 
         {/* Second form: confirmation & editing of the parsed task */}

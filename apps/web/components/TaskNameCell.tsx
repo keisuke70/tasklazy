@@ -29,7 +29,7 @@ export default function TaskNameCell({
         />
       ) : (
         <div className="select-none cursor-default touch-none">
-          <div className="font-medium pb-3">{value}</div>
+          <div className="font-medium pb-1">{value}</div>
         </div>
       )}
     </div>

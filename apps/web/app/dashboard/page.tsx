@@ -145,22 +145,22 @@ export default function HomePage() {
       {
         taskId: "task2",
         priority: 2,
-        startTime: "08:45",
+        startTime: "08:50",
       },
       {
         taskId: "task3",
         priority: 3,
-        startTime: "09:15",
+        startTime: "10:15",
       },
       {
         taskId: "task4",
         priority: 4,
-        startTime: "10:00",
+        startTime: "11:10",
       },
       {
         taskId: "task5",
         priority: 5,
-        startTime: "11:30",
+        startTime: "13:30",
       },
     ];
 
@@ -183,12 +183,9 @@ export default function HomePage() {
   // Layout: We'll place the Task List on the left and the Schedule view on the right.
 
   return (
-    <div className="flex pt-5 gap-8 h-full w-full">
-      <div className="w-2/3">
-        <div className="mb-5">
-          <TaskRegistrationPanel onAddTask={handleAddTask} />
-        </div>
-        <div className="pl-5 h-2/3 overflow-auto">
+    <div className="flex pt-8 gap-8 h-full w-full">
+      <div className="w-4/6">
+        <div className="pl-5 max-h-3/4 overflow-auto">
           <TaskListTable
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
@@ -198,16 +195,21 @@ export default function HomePage() {
             setEditDetails={setEditDetails}
           />
         </div>
-        <div className="m-8 flex justify-center">
-          <GenerateScheduleButton
-            tasks={tasks}
-            onGenerateSchedule={handleGenerateSchedule}
-          />
+        <div className="flex justify-center mt-5">
+          <div className="w-full ml-24">
+            <TaskRegistrationPanel onAddTask={handleAddTask} />
+          </div>
+          <div className="ml-3 mt-1">
+            <GenerateScheduleButton
+              tasks={tasks}
+              onGenerateSchedule={handleGenerateSchedule}
+            />
+          </div>
         </div>
       </div>
 
       {/* Right Column: Daily Schedule View – flex-grow factor of 1 */}
-      <div className="w-1/3">
+      <div className="w-2/6">
         <DailyScheduleView
           scheduledBlocks={scheduledBlocks}
           tasks={tasks}

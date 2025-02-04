@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
 interface ScheduleBlockProps {
@@ -9,16 +9,16 @@ interface ScheduleBlockProps {
   priority: number;
   startTime: string;
   duration: number;
+  /** If true, disable moving the block. */
   isFixed?: boolean;
-  onBlockMoveStart?: (taskId: string) => void;
-
   /**
-   * Called when the user drops the block.
-   * Typically handled in the parent onDrop, but provided if needed.
+   * Called when the user initiates a move (via mouse down).
+   * The parent can then start its continuous drag logic.
    */
-  onBlockMoveEnd?: (taskId: string, newStartTime: string) => void;
-
-  /** Optional style to apply directly to the outer container of this ScheduleBlock */
+  onBlockMoveStart?: (e: React.MouseEvent) => void;
+  /**
+   * Optional inline styles to apply directly to this block’s container.
+   */
   style?: React.CSSProperties;
 }
 
@@ -57,35 +57,17 @@ const ScheduleBlock: React.FC<ScheduleBlockProps> = ({
   duration,
   isFixed = false,
   onBlockMoveStart,
-  onBlockMoveEnd,
   style,
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-
   // Calculate the endTime from startTime + duration.
   const startMinutes = parseTimeToMinutes(startTime);
   const endMinutes = startMinutes + duration;
   const endTime = minutesToTimeStr(endMinutes);
 
-  const handleDragStart = (e: React.DragEvent) => {
-    if (isFixed) {
-      // Prevent dragging if block is fixed
-      e.preventDefault();
-      return;
-    }
-    setIsDragging(true);
-
-    // Store the task ID for reading in parent onDrop
-    e.dataTransfer.setData("text/plain", taskId);
-
-    onBlockMoveStart?.(taskId);
-  };
-
-  const handleDragEnd = (e: React.DragEvent) => {
+  /** Mouse down starts a move if block is not fixed. */
+  const handleMouseDown = (e: React.MouseEvent) => {
     if (isFixed) return;
-    setIsDragging(false);
-    // If needed, onBlockMoveEnd could be called here,
-    // but typically the parent handles final drop logic.
+    onBlockMoveStart?.(e);
   };
 
   return (
@@ -93,19 +75,16 @@ const ScheduleBlock: React.FC<ScheduleBlockProps> = ({
       <Tooltip.Root>
         <Tooltip.Trigger asChild>
           <div
-            style={style} // The outermost div is absolutely positioned if `style` is passed in
-            draggable={!isFixed}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
+            style={style}
+            onMouseDown={handleMouseDown}
             className={`
               ${getPriorityColor(priority)}
               ${isFixed ? "opacity-50 cursor-not-allowed" : "cursor-move"}
-              ${isDragging ? "opacity-75" : ""}
               p-1 rounded-md shadow-md
               transition-all duration-200 ease-in-out
             `}
           >
-            {/* If duration <= 30, show times on the same line. Otherwise, separate line. */}
+            {/* If duration <= 30, show times on the same line; otherwise, separate lines. */}
             {duration <= 30 ? (
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-xs truncate w-1/2">

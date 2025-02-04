@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   Table,
   TableBody,
-  TableHead,
   TableHeader,
   TableRow as UiTableRow,
   TableHead as UiTableHead,
@@ -18,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface TaskListTableProps {
   tasks: Task[];
@@ -38,12 +37,18 @@ export default function TaskListTable({
   editDetails,
   setEditDetails,
 }: TaskListTableProps) {
-
   const toggleColumns = () => {
     setEditDetails((prev) => !prev);
   };
   return (
-    <div className="h-full w-auto overflow-auto relative">
+    <div
+      className={cn(
+        "h-full overflow-auto relative mt-2 ml-3 border border-accent rounded-lg",
+        {
+          "ml-16": !editDetails,
+        }
+      )}
+    >
       <Table className="relative">
         {/* TABLE HEADER */}
         <TableHeader className="sticky top-0 bg-white z-10">

@@ -72,7 +72,7 @@ export default function TaskRow({
       </TableCell>
 
       <TableCell
-        className={`py-4 ${!editDetails ? "cursor-pointer relative" : ""}`}
+        className={`py-3 ${!editDetails ? "cursor-pointer relative" : ""}`}
         onClick={!editDetails ? handleRowClick : undefined}
       >
         <div className="flex flex-col">

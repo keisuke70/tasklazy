@@ -1,7 +1,7 @@
 // Root layout: app/layout.tsx
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
-
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -18,6 +18,7 @@ export default function RootLayout({
     <html lang="en" className="h-full w-full">
       <body className={`${inter.className} h-full w-full m-0 p-0`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

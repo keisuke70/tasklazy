@@ -17,7 +17,7 @@ body {
     /* Your chosen colors */
     --text: 245 81% 6%;
     --background: 240 60% 99%;
-    --primary: 114 89% 37%;
+    --primary: 113 55% 38%;
     --secondary: 120 5% 4%;
     --accent: 89 38% 72%;
     
@@ -32,7 +32,7 @@ body {
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-      background: #d8e4d7;
+      background: #dbdddb;
       border-radius: 5px;
     }
 
