@@ -1,5 +1,5 @@
 {
-  "name": "tasklazy",
+  "name": "repo",
   "private": true,
   "scripts": {
     "build": "turbo build",

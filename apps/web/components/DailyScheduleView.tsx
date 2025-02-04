@@ -141,7 +141,7 @@ export default function DailyScheduleView({
   }, [dragging, onTaskMove]);
 
   return (
-    <div className="bg-white pt-0 px-6 rounded-sm shadow-xl h-full overflow-x-hidden border border-accent">
+    <div className="bg-white pt-0 px-6 rounded-md shadow-xl h-full overflow-x-hidden border border-accent">
       <h2 className="text-lg font-semibold my-3">Today’s Schedule</h2>
       {/* Two-column layout: left for hour labels, right for a single container with lines & tasks */}
       <div className="grid grid-cols-[auto_1fr] ">

@@ -15,7 +15,7 @@ export default function DashboardLayout({
         <SidebarTrigger className="absolute top-7 left-4 z-20">
           <Menu className="h-6 w-6" />
         </SidebarTrigger>
-        <main className="h-full w-full p-2">{children}</main>
+        <main className="h-full w-full p-6">{children}</main>
       </div>
     </SidebarProvider>
   );

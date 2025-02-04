@@ -43,7 +43,7 @@ export default function TaskListTable({
   return (
     <div
       className={cn(
-        "h-full overflow-auto relative mt-2 ml-10 border border-accent rounded-sm",
+        "h-full overflow-y-auto relative mt-2 ml-5 border border-accent rounded-md shadow-lg",
         {
           "ml-16": !editDetails,
         }
@@ -55,7 +55,7 @@ export default function TaskListTable({
           <UiTableRow>
             <TooltipProvider>
               <UiTableHead className="w-[60px] text-center">Done</UiTableHead>
-              <UiTableHead className="min-w-[250px]">Task Name</UiTableHead>
+              <UiTableHead className="min-w-[210px]">Task Name</UiTableHead>
               {editDetails && (
                 <>
                   <UiTableHead className="w-[80px]">
@@ -72,7 +72,7 @@ export default function TaskListTable({
                   </UiTableHead>
                 </>
               )}
-              <UiTableHead className="w-[60px] text-center">
+              <UiTableHead className="w-[40px] text-center">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <button

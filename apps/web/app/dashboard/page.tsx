@@ -225,7 +225,7 @@ export default function HomePage() {
       </div>
 
       {/* Right Column: Daily Schedule View – flex-grow factor of 1 */}
-      <div className="w-2/6 p-2 mb-5">
+      <div className="w-2/6 p-2 mb-2">
         <DailyScheduleView
           scheduledBlocks={scheduledBlocks}
           tasks={tasks}
