@@ -8,14 +8,12 @@ interface TaskNameCellProps {
   value: string;
   editDetails: boolean;
   onChange?: (newValue: string) => void;
-  priority?: number;
 }
 
 export default function TaskNameCell({
   value,
   editDetails,
   onChange,
-  priority,
 }: TaskNameCellProps) {
   return (
     <div className="relative">

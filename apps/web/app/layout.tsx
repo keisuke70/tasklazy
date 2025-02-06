@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "TaskLazy",
   description: "A simple task management app",
+  other: {
+    "apple-mobile-web-app-title": "TaskLazy",
+  },
 };
 
 export default function RootLayout({

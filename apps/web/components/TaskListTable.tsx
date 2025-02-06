@@ -18,6 +18,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import AiIcon from "@/components/icons/AiIcon";
 
 interface TaskListTableProps {
   tasks: Task[];
@@ -43,7 +44,7 @@ export default function TaskListTable({
   return (
     <div
       className={cn(
-        "h-full overflow-y-auto relative mt-2 ml-5 border border-accent rounded-md shadow-lg",
+        "h-full overflow-y-auto relative mt-2 ml-5 border border-accent rounded-md shadow-lg select-none",
         {
           "ml-16": !editDetails,
         }
@@ -56,6 +57,14 @@ export default function TaskListTable({
             <TooltipProvider>
               <UiTableHead className="w-[60px] text-center">Done</UiTableHead>
               <UiTableHead className="min-w-[210px]">Task Name</UiTableHead>
+              {!editDetails && (
+                <UiTableHead className="h-8 w-16">
+                  <div className="flex">
+                    <div className="text-nowrap"> Ask AI</div>
+                    <AiIcon className="h-4" />
+                  </div>
+                </UiTableHead>
+              )}
               {editDetails && (
                 <>
                   <UiTableHead className="w-[80px]">
@@ -80,7 +89,7 @@ export default function TaskListTable({
                       className="inline-flex items-center justify-center p-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-gray-300"
                       aria-label="Toggle columns"
                     >
-                      <Menu className="h-4 w-4"/>
+                      <Menu className="h-4 w-4" />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>

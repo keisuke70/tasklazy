@@ -81,19 +81,16 @@ export default function TaskRow({
             value={tempTask.name}
             editDetails={editDetails}
             onChange={(newValue) => handleFieldChange("name", newValue)}
-            priority={tempTask.priority}
           />
           {!editDetails && (
-            <div onClick={(e) => e.stopPropagation()}>
+            <div>
               <TooltipProvider>
-                <TaskIcons
-                  task={tempTask}
-                  formatDuration={formatDuration}
-                />
+                <TaskIcons task={tempTask} formatDuration={formatDuration} />
               </TooltipProvider>
             </div>
           )}
         </div>
+
         {!editDetails && tempTask.priority !== undefined && (
           <div className="absolute inset-0 bg-gray-200 bg-opacity-70 flex items-center justify-center pointer-events-none">
             <span className="text-lg font-bold text-gray-700">
@@ -103,12 +100,19 @@ export default function TaskRow({
         )}
       </TableCell>
 
+      <TableCell>
+        <div className="flex h-full justify-center items-center">
+          <button type="button" className="focus:outline-none">
+            <img src="/askicon.png" alt="Button Icon" className="w-5 h-5" />
+          </button>
+        </div>
+      </TableCell>
+
       {/* Extra editable fields appear in edit mode */}
       {editDetails && (
         <TaskEditFields task={tempTask} handleFieldChange={handleFieldChange} />
       )}
       <TableCell></TableCell>
-
     </UiTableRow>
   );
 }
