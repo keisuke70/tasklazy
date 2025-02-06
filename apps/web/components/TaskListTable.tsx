@@ -80,7 +80,7 @@ export default function TaskListTable({
                       className="inline-flex items-center justify-center p-2 bg-gray-100 rounded hover:bg-gray-200 transition-colors focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-gray-300"
                       aria-label="Toggle columns"
                     >
-                      <Menu className="h-4 w-4" />
+                      <Menu className="h-4 w-4"/>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>

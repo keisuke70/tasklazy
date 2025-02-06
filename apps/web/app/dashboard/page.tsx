@@ -141,16 +141,6 @@ export default function HomePage() {
       (task) => task.priority !== undefined
     );
 
-    // // 2. Here we simulate generating scheduled blocks for the prioritized tasks.
-    // const newScheduledBlocks: ScheduledBlock[] = prioritizedTasks.map(
-    //   (task) => ({
-    //     taskId: task.id,
-    //     priority: task.priority!,
-    //     // Example startTime/endTime: assign them all in a row for demonstration.
-    //     startTime: "09:45",
-    //     endTime: "10:00",
-    //   })
-    // );
     // Hard-coded scheduled blocks for demonstration:
     const newScheduledBlocks: ScheduledBlock[] = [
       {
