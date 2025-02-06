@@ -3,11 +3,17 @@
 import React, { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow as UiTableRow } from "@/components/ui/table";
-import { Task} from "@/lib/definition";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Task } from "@/lib/definition";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 import TaskNameCell from "./TaskNameCell";
 import TaskIcons from "./TaskIcons";
 import TaskEditFields from "./TaskEditFields";
+import AiIcon from "./icons/AiIcon";
 
 export interface TaskRowProps {
   task: Task;
@@ -100,19 +106,31 @@ export default function TaskRow({
         )}
       </TableCell>
 
-      <TableCell>
-        <div className="flex h-full justify-center items-center">
-          <button type="button" className="focus:outline-none">
-            <img src="/askicon.png" alt="Button Icon" className="w-5 h-5" />
-          </button>
-        </div>
-      </TableCell>
+      <TableCell></TableCell>
 
       {/* Extra editable fields appear in edit mode */}
       {editDetails && (
         <TaskEditFields task={tempTask} handleFieldChange={handleFieldChange} />
       )}
-      <TableCell></TableCell>
+
+      {/* Button with tooltip */}
+      <TableCell>
+        <div className="flex h-full justify-center items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button type="button" className="focus:outline-none">
+                <img src="/askicon.png" alt="Button Icon" className="w-5 h-5" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <div className="flex items-center">
+                <p className="mr-1">AI Assit</p>
+                <img src="/brush.png" alt="Button Icon" className="w-5 h-5" />
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </TableCell>
     </UiTableRow>
   );
 }

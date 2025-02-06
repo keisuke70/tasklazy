@@ -60,8 +60,7 @@ export default function TaskListTable({
               {!editDetails && (
                 <UiTableHead className="h-8 w-16">
                   <div className="flex">
-                    <div className="text-nowrap"> Ask AI</div>
-                    <AiIcon className="h-4" />
+                    <div className="text-nowrap"> Priority</div>
                   </div>
                 </UiTableHead>
               )}
