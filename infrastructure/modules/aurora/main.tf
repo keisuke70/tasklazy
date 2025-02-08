@@ -4,7 +4,7 @@ resource "aws_rds_cluster" "main" {
   engine                  = "aurora-postgresql"
   engine_version          = "15.3"
   database_name           = "mydb"
-  master_username         = "admin"
+  master_username         = "dbadmin"
   master_password         = random_password.db_password.result
   skip_final_snapshot     = true
   vpc_security_group_ids  = [var.db_security_group_id]
