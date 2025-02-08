@@ -38,3 +38,20 @@ yarn-error.log*
 *.pem
 
 .pnpm-store/
+
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+
+# Terraform lock file
+.terraform.lock.hcl
+
+# Terraform provider binaries
+terraform-provider-*
+
+# Terraform module metadata
+modules.json
+
+# License files (if not needed in version control)
+LICENSE.txt
