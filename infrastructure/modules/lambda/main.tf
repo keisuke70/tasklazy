@@ -19,7 +19,7 @@ resource "aws_lambda_function" "create_user" {
   function_name = "create-user"
   role          = aws_iam_role.lambda_exec.arn
   handler       = "index.handler"
-  runtime       = "nodejs18.x"
+  runtime       = "nodejs20.x"
   
   vpc_config {
     subnet_ids         = var.subnet_ids
