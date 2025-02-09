@@ -1,34 +1,29 @@
 variable "subnet_ids" {
-  description = "List of subnet IDs in which the VPC Lambda function will be deployed."
+  description = "List of subnet IDs for VPC Lambdas."
   type        = list(string)
 }
 
 variable "lambda_security_group_id" {
-  description = "Security group ID for the VPC Lambda function."
+  description = "Security group ID for VPC Lambdas."
   type        = string
 }
 
 variable "db_secret_arn" {
-  description = "The ARN of the database secret used by the VPC Lambda function."
-  type        = string
-}
-
-variable "openai_requests_url" {
-  description = "URL for the openai-requests SQS queue."
-  type        = string
-}
-
-variable "openai_results_url" {
-  description = "URL for the openai-results SQS queue."
+  description = "The ARN of the database secret (from Secrets Manager)."
   type        = string
 }
 
 variable "gemini_api_key" {
-  description = "The API key for accessing gemini."
+  description = "API key for the Gemini API."
   type        = string
 }
 
-variable "openai_requests_arn" {
-  description = "ARN of the openai-requests SQS queue."
+variable "sqs_gemini_results_url" {
+  description = "The SQS queue URL to which the parse-task lambda will post the Gemini results."
+  type        = string
+}
+
+variable "sqs_gemini_results_arn" {
+  description = "The ARN of the SQS queue for Gemini results."
   type        = string
 }

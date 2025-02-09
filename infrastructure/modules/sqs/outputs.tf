@@ -1,14 +1,9 @@
-output "openai_requests_url" {
-  description = "URL of the openai-requests SQS queue"
-  value       = aws_sqs_queue.openai_requests.id
+output "sqs_gemini_results_url" {
+  description = "URL of the Gemini results SQS queue"
+  value       = aws_sqs_queue.gemini_results.id
 }
 
-output "openai_results_url" {
-  description = "URL of the openai-results SQS queue"
-  value       = aws_sqs_queue.openai_results.id
-}
-
-output "openai_requests_arn" {
-  description = "ARN of the openai-requests SQS queue"
-  value       = aws_sqs_queue.openai_requests.arn
+output "sqs_gemini_results_arn" {
+  description = "ARN of the Gemini results SQS queue"
+  value       = aws_sqs_queue.gemini_results.arn
 }

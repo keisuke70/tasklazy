@@ -3,24 +3,52 @@ resource "aws_api_gateway_rest_api" "main" {
   description = "API for My Application"
 }
 
-resource "aws_api_gateway_resource" "users" {
+#######################################
+# /api/parse-task (for Gemini API calls)
+#######################################
+resource "aws_api_gateway_resource" "parse_task" {
   rest_api_id = aws_api_gateway_rest_api.main.id
   parent_id   = aws_api_gateway_rest_api.main.root_resource_id
-  path_part   = "users"
+  path_part   = "parse-task"
 }
 
-resource "aws_api_gateway_method" "post_user" {
+resource "aws_api_gateway_method" "parse_task_post" {
   rest_api_id   = aws_api_gateway_rest_api.main.id
-  resource_id   = aws_api_gateway_resource.users.id
+  resource_id   = aws_api_gateway_resource.parse_task.id
   http_method   = "POST"
   authorization = "NONE"
 }
 
-resource "aws_api_gateway_integration" "lambda" {
+resource "aws_api_gateway_integration" "parse_task_integration" {
   rest_api_id             = aws_api_gateway_rest_api.main.id
-  resource_id             = aws_api_gateway_resource.users.id
-  http_method             = aws_api_gateway_method.post_user.http_method
+  resource_id             = aws_api_gateway_resource.parse_task.id
+  http_method             = aws_api_gateway_method.parse_task_post.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.lambda_arn
+  uri                     = var.parse_task_lambda_arn
+}
+
+##############################################
+# /api/generate-schedule (for internal DB updates)
+##############################################
+resource "aws_api_gateway_resource" "generate_schedule" {
+  rest_api_id = aws_api_gateway_rest_api.main.id
+  parent_id   = aws_api_gateway_rest_api.main.root_resource_id
+  path_part   = "generate-schedule"
+}
+
+resource "aws_api_gateway_method" "generate_schedule_post" {
+  rest_api_id   = aws_api_gateway_rest_api.main.id
+  resource_id   = aws_api_gateway_resource.generate_schedule.id
+  http_method   = "POST"
+  authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "generate_schedule_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.main.id
+  resource_id             = aws_api_gateway_resource.generate_schedule.id
+  http_method             = aws_api_gateway_method.generate_schedule_post.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = var.generate_schedule_lambda_arn
 }
