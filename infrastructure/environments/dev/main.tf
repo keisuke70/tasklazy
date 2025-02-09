@@ -11,14 +11,24 @@ module "aurora" {
   db_security_group_id = module.networking.db_security_group_id
 }
 
-# module "lambda" {
-#   source                   = "../../modules/lambda"
-#   subnet_ids               = module.networking.private_subnet_ids
-#   lambda_security_group_id = module.networking.lambda_security_group_id
-#   db_secret_arn            = module.aurora.db_secret_arn  # Assuming you output this from Aurora
-# }
 
-# module "api_gateway" {
-#   source     = "../../modules/api-gateway"
-#   lambda_arn = module.lambda.create_user_arn  # Ensure the lambda module outputs the function's ARN
-# }
+module "sqs" {
+  source = "../../modules/sqs"
+}
+
+
+module "lambda" {
+  source                   = "../../modules/lambda"
+  subnet_ids               = module.networking.private_subnet_ids
+  lambda_security_group_id = module.networking.lambda_security_group_id
+  db_secret_arn            = module.aurora.db_secret_arn
+  openai_requests_url      = module.sqs.openai_requests_url
+  openai_results_url       = module.sqs.openai_results_url
+  gemini_api_key           = var.gemini_api_key
+  openai_requests_arn      = module.sqs.openai_requests_arn
+}
+
+module "api_gateway" {
+  source     = "../../modules/api-gateway"
+  lambda_arn = module.lambda.vpc_handler_arn
+}
