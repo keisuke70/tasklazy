@@ -1,6 +1,6 @@
-# Task Manager & Scheduler
+# TaskLazy --Task Manager & Scheduler
 
-Boost your productivity with **Task Manager & Scheduler**!  
+Boost your productivity with **TaskLazy**!  
 Effortlessly manage all your tasks and seamlessly generate your daily schedule.
 
 ---
@@ -47,27 +47,26 @@ Effortlessly manage all your tasks and seamlessly generate your daily schedule.
 
 ---
 
-## 🎯 Why Task Manager & Scheduler?
+## 🎯 Why TaskLazy?
 
-Designed for busy professionals, students, and anyone who craves simplicity, Task Manager & Scheduler minimizes the mental load of task management so you can focus on what truly matters: getting things done!
+Designed for busy professionals, students, and anyone who craves simplicity, TaskLazy minimizes the mental load of task management so you can focus on what truly matters: getting things done!
 
 ---
 
 ## 📩 Get Started
 
-Task Manager & Scheduler is continuously evolving.  
+TaskLazy is continuously evolving.  
 Follow this repository for updates and release announcements as we enhance task management for a seamless daily workflow.
 
 ---
 
-### 🌐 Access Task Manager & Scheduler
-Discover the app and transform your productivity: [Task Manager & Scheduler](#)  
+### 🌐 Access TaskLazy (under development)
 *Note: Built-in integration with Google Calendar ensures a smooth scheduling experience.*
 
 ---
 
 ## 📬 Contact
 
-For inquiries, suggestions, or collaboration opportunities, please reach out at [your-email@example.com](mailto:your-email@example.com).
+For inquiries, suggestions, or collaboration opportunities, please reach out at [ykei2356@gmail.com](ykei2356@gmail.com).
 
-Happy scheduling with **Task Manager & Scheduler**! 🚀
+Happy scheduling with **TaskLazy**! 🚀
