@@ -3,6 +3,8 @@
 Boost your productivity with **TaskLazy**!  
 Effortlessly manage all your tasks and seamlessly generate your daily schedule.
 
+Demo UI:
+![Demo Dashboard UI](https://github.com/keisuke70/tasklazy/tree/main/apps/web/public/SampleUI.png?raw=true)
 ---
 
 ## 🚀 Features
