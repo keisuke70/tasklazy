@@ -56,10 +56,10 @@ export default function TaskListTable({
           <UiTableRow>
             <TooltipProvider>
               <UiTableHead className="w-[60px] text-center">Done</UiTableHead>
-              <UiTableHead className="min-w-[210px]">Task Name</UiTableHead>
+              <UiTableHead className="min-w-[200px]">Task Name</UiTableHead>
               {!editDetails && (
-                <UiTableHead className="h-8 w-16">
-                  <div className="flex">
+                <UiTableHead className="h-8 w-25">
+                  <div className="flex justify-center">
                     <div className="text-nowrap"> Priority</div>
                   </div>
                 </UiTableHead>

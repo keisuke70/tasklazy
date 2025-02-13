@@ -4,16 +4,10 @@ import React, { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TableCell, TableRow as UiTableRow } from "@/components/ui/table";
 import { Task } from "@/lib/definition";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
 import TaskNameCell from "./TaskNameCell";
 import TaskIcons from "./TaskIcons";
 import TaskEditFields from "./TaskEditFields";
-import AiIcon from "./icons/AiIcon";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
 export interface TaskRowProps {
   task: Task;
@@ -45,7 +39,6 @@ export default function TaskRow({
     onUpdateTask(updated);
   };
 
-  // In non‑edit mode, clicking anywhere in this cell toggles selection.
   const handleRowClick = () => {
     if (editDetails) return;
     if (tempTask.priority !== undefined) {
@@ -80,7 +73,6 @@ export default function TaskRow({
 
       <TableCell
         className={`py-3 ${!editDetails ? "cursor-pointer relative" : ""}`}
-        onClick={!editDetails ? handleRowClick : undefined}
       >
         <div className="flex flex-col">
           <TaskNameCell
@@ -90,45 +82,35 @@ export default function TaskRow({
           />
           {!editDetails && (
             <div>
-              <TooltipProvider>
-                <TaskIcons task={tempTask} formatDuration={formatDuration} />
-              </TooltipProvider>
+              <TaskIcons task={tempTask} formatDuration={formatDuration} />
             </div>
           )}
         </div>
-
-        {!editDetails && tempTask.priority !== undefined && (
-          <div className="absolute inset-0 bg-gray-200 bg-opacity-70 flex items-center justify-center pointer-events-none">
-            <span className="text-lg font-bold text-gray-700">
-              {tempTask.priority}
-            </span>
-          </div>
-        )}
       </TableCell>
 
-      <TableCell></TableCell>
-
-      {/* Extra editable fields appear in edit mode */}
+      {!editDetails && (
+        <TableCell
+          onClick={!editDetails ? handleRowClick : undefined}
+          className={
+            !editDetails
+              ? "cursor-pointer hover:bg-gray-100 transition-colors py-2"
+              : ""
+          }
+        >
+          <span className="text-lg font-bold text-gray-700 flex justify-center">
+            {tempTask.priority}
+          </span>
+        </TableCell>
+      )}
       {editDetails && (
         <TaskEditFields task={tempTask} handleFieldChange={handleFieldChange} />
       )}
 
-      {/* Button with tooltip */}
       <TableCell>
         <div className="flex h-full justify-center items-center">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button type="button" className="focus:outline-none">
-                <img src="/askicon.png" alt="Button Icon" className="w-5 h-5" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <div className="flex items-center">
-                <p className="mr-1">AI Assit</p>
-                <img src="/brush.png" alt="Button Icon" className="w-5 h-5" />
-              </div>
-            </TooltipContent>
-          </Tooltip>
+          <button type="button" className="focus:outline-none">
+            <DeleteOutlinedIcon sx={{ color: "#ab003c" }} />
+          </button>
         </div>
       </TableCell>
     </UiTableRow>
