@@ -18,14 +18,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import AiIcon from "@/components/icons/AiIcon";
 
 interface TaskListTableProps {
   tasks: Task[];
   onUpdateTask: (updatedTask: Task) => void;
   onToggleComplete: (taskId: string) => void;
-  // Updated to allow clearing the priority by passing undefined.
   onSetPriority: (taskId: string, priority?: number) => void;
+  onDeleteTask: (taskId: string) => void;
   editDetails: boolean;
   setEditDetails: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -35,6 +34,7 @@ export default function TaskListTable({
   onUpdateTask,
   onToggleComplete,
   onSetPriority,
+  onDeleteTask,
   editDetails,
   setEditDetails,
 }: TaskListTableProps) {
@@ -109,6 +109,7 @@ export default function TaskListTable({
               onUpdateTask={onUpdateTask}
               onToggleComplete={onToggleComplete}
               onSetPriority={onSetPriority}
+              onDeleteTask={onDeleteTask}
             />
           ))}
         </TableBody>

@@ -186,7 +186,10 @@ export default function HomePage() {
       )
     );
   };
-  // Layout: We'll place the Task List on the left and the Schedule view on the right.
+
+  const handleDeleteTask = (taskId: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+  };
 
   return (
     <div className="flex pt-5 gap-8 h-full w-full">
@@ -197,6 +200,7 @@ export default function HomePage() {
             onUpdateTask={handleUpdateTask}
             onToggleComplete={handleToggleComplete}
             onSetPriority={handleSetPriority}
+            onDeleteTask={handleDeleteTask}
             editDetails={editDetails}
             setEditDetails={setEditDetails}
           />

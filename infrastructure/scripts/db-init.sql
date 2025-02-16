@@ -23,6 +23,7 @@ CREATE TABLE tasks (
   reminder_time TIMESTAMPTZ,
   repeat_rule repeat_option NOT NULL DEFAULT 'None',
   is_complete BOOLEAN NOT NULL DEFAULT FALSE,
+  pritority INT,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
