@@ -14,6 +14,8 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     ./aws/install && \
     rm -rf awscliv2.zip aws
 
+RUN apt update && apt install -y zip
+
 # Install Terraform version 1.10.5
 ENV TERRAFORM_VERSION=1.10.5
 RUN wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \

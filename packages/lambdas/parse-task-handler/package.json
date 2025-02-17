@@ -1,0 +1,17 @@
+{
+  "name": "parse-task-handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mkdir -p dist && esbuild index.js --bundle --minify --platform=node --target=node20 --outfile=dist/index.js && cd dist && zip -r index.zip index.js && cd ../../.."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-sqs": "^3.749.0",
+    "node-fetch": "^3.3.2"
+  }
+}

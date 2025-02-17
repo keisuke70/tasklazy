@@ -18,7 +18,8 @@
         "bradlc.vscode-tailwindcss",
         "hashicorp.terraform",
         "ms-azuretools.vscode-docker",
-        "saoudrizwan.claude-dev"
+        "saoudrizwan.claude-dev",
+        "GitHub.copilot"
       ]
     }
   },

@@ -26,10 +26,41 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
+      # Build all Lambda packages
+      - name: Build VPC Handler Lambda
+        working-directory: packages/lambdas/vpc-handler
+        run: |
+          npm install
+          npm run build
+
+      - name: Build Parse Task Lambda
+        working-directory: packages/lambdas/parse-task-handler
+        run: |
+          npm install
+          npm run build
+
+      - name: Build DB Update Lambda
+        working-directory: packages/lambdas/db-update-handler
+        run: |
+          npm install
+          npm run build
+
+      - name: Build Update Task Lambda
+        working-directory: packages/lambdas/update-task-handler
+        run: |
+          npm install
+          npm run build
+
+      - name: Build DB Initialization Lambda
+        working-directory: packages/lambdas/db-init-handler
+        run: |
+          npm install
+          npm run build
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.6.6  # Pinned to a specific version
+          terraform_version: 1.6.6
           terraform_wrapper: false 
 
       - name: Terraform Init

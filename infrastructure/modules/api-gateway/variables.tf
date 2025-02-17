@@ -7,3 +7,8 @@ variable "generate_schedule_lambda_arn" {
   description = "ARN of the generate-schedule (VPC) Lambda."
   type        = string
 }
+
+variable "update_task_lambda_arn" {
+  description = "ARN of the update-task handler Lambda."
+  type        = string
+}

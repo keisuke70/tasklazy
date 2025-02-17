@@ -27,3 +27,8 @@ variable "sqs_gemini_results_arn" {
   description = "The ARN of the SQS queue for Gemini results."
   type        = string
 }
+
+variable "db_connection_string" {
+  description = "Connection string for Aurora DB"
+  type        = string
+}

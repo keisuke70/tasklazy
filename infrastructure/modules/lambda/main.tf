@@ -14,7 +14,7 @@ resource "aws_iam_role" "lambda_exec" {
 }
 
 ###########################################
-# VPC Handler – For simple DB operations
+# VPC Handler – For generating schedule (DB queries)
 ###########################################
 resource "aws_lambda_function" "vpc_handler" {
   filename         = "${path.module}/../../../../packages/lambdas/vpc-handler/dist/index.zip"
@@ -30,7 +30,7 @@ resource "aws_lambda_function" "vpc_handler" {
 
   environment {
     variables = {
-      DB_SECRET_ARN = var.db_secret_arn
+      DB_CONNECTION_STRING = var.db_connection_string
     }
   }
 }
@@ -50,6 +50,7 @@ resource "aws_lambda_function" "parse_task_handler" {
     variables = {
       GEMINI_API_KEY         = var.gemini_api_key
       SQS_GEMINI_RESULTS_URL = var.sqs_gemini_results_url
+      AWS_REGION             = "us-west-1"
     }
   }
 }
@@ -71,7 +72,51 @@ resource "aws_lambda_function" "db_update_handler" {
 
   environment {
     variables = {
-      DB_SECRET_ARN = var.db_secret_arn
+      DB_CONNECTION_STRING = var.db_connection_string
+    }
+  }
+}
+
+#####################################################################
+# Update Task Handler – VPC Lambda for synchronous task updates
+#####################################################################
+resource "aws_lambda_function" "update_task_handler" {
+  filename         = "${path.module}/../../../../packages/lambdas/update-task-handler/dist/index.zip"
+  function_name    = "update-task-handler"
+  role             = aws_iam_role.lambda_exec.arn
+  handler          = "index.handler"
+  runtime          = "nodejs20.x"
+  
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [var.lambda_security_group_id]
+  }
+  
+  environment {
+    variables = {
+      DB_CONNECTION_STRING = var.db_connection_string
+    }
+  }
+}
+
+#####################################################################
+# DB Initialization Handler – VPC Lambda to run db-init.sql
+#####################################################################
+resource "aws_lambda_function" "db_init_handler" {
+  filename         = "${path.module}/../../../../packages/lambdas/db-init-handler/dist/index.zip"
+  function_name    = "db-init-handler"
+  role             = aws_iam_role.lambda_exec.arn
+  handler          = "index.handler"
+  runtime          = "nodejs20.x"
+  
+  vpc_config {
+    subnet_ids         = var.subnet_ids
+    security_group_ids = [var.lambda_security_group_id]
+  }
+  
+  environment {
+    variables = {
+      DB_CONNECTION_STRING = var.db_connection_string
     }
   }
 }

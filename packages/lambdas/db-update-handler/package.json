@@ -1,0 +1,16 @@
+{
+  "name": "db-update-handler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mkdir -p dist && esbuild index.js --bundle --minify --platform=node --target=node20 --outfile=dist/index.js && cd dist && zip -r index.zip index.js && cd ../../.."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pg": "^8.13.3"
+  }
+}
