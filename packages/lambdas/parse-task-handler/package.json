@@ -20,7 +20,7 @@
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.749.0",
     "node-fetch": "^3.3.2",
-    "@google/generative-ai": "^1.0.0"
+    "@google/generative-ai": "^0.21.0"
   },
   "devDependencies": {
     "esbuild": "^0.17.18"
