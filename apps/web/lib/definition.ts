@@ -3,7 +3,7 @@ export interface Task {
   name: string;
   duration: number; // Changed to number (minutes)
   dueDate?: string; // ISO date string (YYYY-MM-DD)
-  reminderTime?: string; // ISO datetime string
+  reminderTime?: string; // ISO datetime string like
   repeatRule: RepeatOption;
   isComplete: boolean;
   priority?: number;

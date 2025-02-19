@@ -62,7 +62,7 @@ export default function HomePage() {
     {
       id: "task7",
       name: "Quick Email Check",
-      duration: 30, // 11:30 - 12:00
+      duration: 30,
       dueDate: "2025-02-15",
       repeatRule: RepeatOption.None,
       isComplete: false,

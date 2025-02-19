@@ -8,8 +8,8 @@ variable "lambda_security_group_id" {
   type        = string
 }
 
-variable "db_secret_arn" {
-  description = "The ARN of the database secret (from Secrets Manager)."
+variable "db_connection_string" {
+  description = "Database connection string for the Aurora cluster."
   type        = string
 }
 
@@ -25,10 +25,5 @@ variable "sqs_gemini_results_url" {
 
 variable "sqs_gemini_results_arn" {
   description = "The ARN of the SQS queue for Gemini results."
-  type        = string
-}
-
-variable "db_connection_string" {
-  description = "Connection string for Aurora DB"
   type        = string
 }

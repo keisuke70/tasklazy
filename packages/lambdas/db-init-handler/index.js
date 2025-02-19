@@ -1,15 +1,19 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { Client } from "pg";
+
+// Define __dirname for ESM modules.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const handler = async (event) => {
   try {
     // Read the initialization SQL file packaged with your Lambda.
-    // (Make sure that db-init.sql is included in your deployment bundle.)
     const initSqlPath = path.join(__dirname, "db-init.sql");
     const initSql = fs.readFileSync(initSqlPath, "utf-8");
 
-    // Connect to your Aurora PostgreSQL DB. (Ideally, fetch the connection info from Secrets Manager)
+    // Connect to your Aurora PostgreSQL DB. (Ensure DB_CONNECTION_STRING is set.)
     const client = new Client({
       connectionString: process.env.DB_CONNECTION_STRING,
     });
