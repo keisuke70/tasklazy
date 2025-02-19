@@ -30,34 +30,3 @@ module "api_gateway" {
   generate_schedule_lambda_arn = module.lambda.vpc_handler_arn
   update_task_lambda_arn       = module.lambda.update_task_handler_arn
 }
-
-
-module "cognito" {
-  source                  = "../../modules/cognito"
-  user_pool_name          = "my-cognito-userpool"
-  user_pool_client_name   = "my-userpool-client"
-  auto_verified_attributes = ["email"]
-  mfa_configuration       = "OFF"
-  password_minimum_length = 8
-  password_require_uppercase = true
-  password_require_lowercase = true
-  password_require_numbers   = true
-  password_require_symbols   = false
-  explicit_auth_flows     = ["ALLOW_USER_PASSWORD_AUTH", "ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH"]
-  generate_secret         = false
-  refresh_token_validity  = 30
-}
-
-module "amplify" {
-  source = "../../modules/amplify"
-
-  app_name     = "my-amplify-app"
-  repository   = "https://github.com/keisuke70/tasklazy"
-  build_spec   = file("amplify-buildspec.yml")
-  environment_variables = {
-    NEXT_PUBLIC_COGNITO_USER_POOL_ID        = module.cognito.user_pool_id
-    NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID = module.cognito.user_pool_client_id
-  }
-  description  = "Amplify Gen2 app for my Next.js project"
-  custom_rules = []
-}
