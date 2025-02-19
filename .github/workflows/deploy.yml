@@ -74,8 +74,3 @@ jobs:
       - name: Terraform Apply
         working-directory: infrastructure/environments/dev
         run: terraform apply -input=false -auto-approve
-
-      - name: Show Amplify App ID
-        working-directory: infrastructure/environments/dev
-        run: terraform output amplify_app_id
-
