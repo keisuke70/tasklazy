@@ -8,7 +8,7 @@ output "parse_task_handler_arn" {
   value       = aws_lambda_function.parse_task_handler.arn
 }
 
-output "update_task_lambda_arn" {
+output "update_task_handler_arn" {
   description = "ARN of the update task handler Lambda (for /api/update-task)."
   value       = aws_lambda_function.update_task_handler.arn
 }
