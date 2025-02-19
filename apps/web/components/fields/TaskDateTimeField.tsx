@@ -17,7 +17,6 @@ export default function TaskDateTimeField({
     <DateTimePicker24h
       value={value ? new Date(value) : undefined}
       onChange={(newDate) => {
-        console.log(newDate?.toISOString());
         onChange(newDate?.toISOString() || "");
       }}
     />
