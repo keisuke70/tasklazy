@@ -11,6 +11,9 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@aws-amplify/adapter-nextjs": "^1.5.0",
+    "@aws-amplify/auth": "^6.11.0",
+    "@aws-amplify/ui-react": "^6.9.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.4",
@@ -27,6 +30,7 @@
     "@radix-ui/react-toast": "^1.2.5",
     "@radix-ui/react-tooltip": "^1.1.7",
     "@repo/ui": "workspace:*",
+    "aws-amplify": "^6.13.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

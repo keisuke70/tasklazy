@@ -1,0 +1,27 @@
+version: 1
+backend:
+  phases:
+    preBuild:
+      commands:
+        - npm install
+        - amplify pull --appId $AWS_APP_ID --envName $AWS_BRANCH
+    build:
+      commands:
+        - npm ci --cache .npm --prefer-offline
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd apps/web
+        - npm install
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: apps/web/out
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

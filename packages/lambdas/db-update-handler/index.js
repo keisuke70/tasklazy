@@ -15,8 +15,8 @@ export const handler = async (event) => {
 
       // Upsert task record.
       await client.query(
-        `INSERT INTO tasks (id, name, duration, due_date, reminder_time, repeat_rule, is_complete)
-         VALUES ($1, $2, $3, $4, $5, $6, false)
+        `INSERT INTO tasks (id, name, duration, due_date, reminder_time, repeat_rule, is_complete, priority)
+         VALUES ($1, $2, $3, $4, $5, $6, false, null)
          ON CONFLICT (id) DO UPDATE SET
            name = EXCLUDED.name,
            duration = EXCLUDED.duration,

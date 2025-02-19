@@ -1,28 +1,45 @@
-// Root layout: app/layout.tsx
-import "@/styles/globals.css";
-import { Inter } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster";
-const inter = Inter({ subsets: ["latin"] });
+"use client";
 
-export const metadata = {
-  title: "TaskLazy",
-  description: "A simple task management app",
-  other: {
-    "apple-mobile-web-app-title": "TaskLazy",
-  },
-};
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Auth } from "aws-amplify/auth";
 
-export default function RootLayout({
+
+import { TaskManagementSidebar } from "@/components/Sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Menu } from "lucide-react";
+
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    Auth.currentAuthenticatedUser()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch(() => {
+        router.push("/login");
+      });
+  }, [router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <html lang="en" className="h-full w-full">
-      <body className={`${inter.className} h-full w-full m-0 p-0`}>
-        {children}
-        <Toaster />
-      </body>
-    </html>
+    <SidebarProvider className="h-screen w-screen">
+      <TaskManagementSidebar />
+      <div className="flex-1 flex flex-col h-full w-full relative overflow-hidden">
+        <SidebarTrigger className="absolute top-7 left-4 z-20">
+          <Menu className="h-6 w-6" />
+        </SidebarTrigger>
+        <main className="h-full w-full p-6">{children}</main>
+      </div>
+    </SidebarProvider>
   );
 }

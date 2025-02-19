@@ -30,7 +30,7 @@ Task Description: ${taskDescription}
         duration: {
           type: SchemaType.INTEGER,
           description: "Duration in minutes (default 0 if unspecified)",
-          nullable: true,
+          nullable: false,
         },
         due_date: {
           type: SchemaType.STRING,
@@ -47,7 +47,7 @@ Task Description: ${taskDescription}
           type: SchemaType.STRING,
           description:
             'Repeat rule: one of "None", "Daily", "Weekly", or "Monthly" (default "None")',
-          nullable: true,
+          nullable: false,
         },
       },
       required: ["name"],
