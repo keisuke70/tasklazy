@@ -5,15 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir -p dist && cp db-init.sql dist/ && npx esbuild index.js --bundle --minify --platform=node --target=node20 --outfile=dist/index.js && cd dist && zip -r index.zip index.js db-init.sql && cd ../../.."
+    "build": "mkdir -p dist && cp db-init.sql dist/ && npx esbuild index.js --bundle --minify --platform=node --target=node20 --outfile=dist/index.js && cd dist && zip -r index.zip index.js db-init.sql && cd -"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fs": "0.0.1-security",
-    "path": "^0.12.7",
-    "pg": "^8.13.3",
+    "pg": "^8.13.3"
+  },
+  "devDependencies": {
     "esbuild": "^0.17.18"
   }
 }
