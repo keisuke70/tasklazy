@@ -33,7 +33,6 @@ resource "aws_lambda_function" "parse_task_handler" {
     variables = {
       GEMINI_API_KEY         = var.gemini_api_key
       SQS_GEMINI_RESULTS_URL = var.sqs_gemini_results_url
-      AWS_REGION             = "us-west-1"
     }
   }
 
