@@ -1,19 +1,14 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { Client } from "pg";
+const fs = require("fs");
+const path = require("path");
+const { Client } = require("pg");
 
-// Define __dirname for ESM modules.
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-export const handler = async (event) => {
+exports.handler = async function (event) {
   try {
-    // Read the initialization SQL file packaged with your Lambda.
+    // __dirname is natively available in CommonJS modules.
     const initSqlPath = path.join(__dirname, "db-init.sql");
     const initSql = fs.readFileSync(initSqlPath, "utf-8");
 
-    // Connect to your Aurora PostgreSQL DB. (Ensure DB_CONNECTION_STRING is set.)
+    // Connect to your Aurora PostgreSQL DB.
     const client = new Client({
       connectionString: process.env.DB_CONNECTION_STRING,
     });
