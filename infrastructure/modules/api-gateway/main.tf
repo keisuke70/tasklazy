@@ -25,7 +25,7 @@ resource "aws_api_gateway_integration" "parse_task_integration" {
   http_method             = aws_api_gateway_method.parse_task_post.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.parse_task_lambda_arn
+  uri = "arn:aws:apigateway:us-west-1:lambda:path/2015-03-31/functions/${var.parse_task_lambda_arn}/invocations"
 }
 
 ##############################################
@@ -50,7 +50,7 @@ resource "aws_api_gateway_integration" "generate_schedule_integration" {
   http_method             = aws_api_gateway_method.generate_schedule_post.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.generate_schedule_lambda_arn
+  uri = "arn:aws:apigateway:us-west-1:lambda:path/2015-03-31/functions/${var.generate_schedule_lambda_arn}/invocations"
 }
 
 ##############################################
@@ -75,5 +75,5 @@ resource "aws_api_gateway_integration" "update_task_integration" {
   http_method             = aws_api_gateway_method.update_task_patch.http_method
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  uri                     = var.update_task_lambda_arn
+  uri = "arn:aws:apigateway:us-west-1:lambda:path/2015-03-31/functions/${var.update_task_lambda_arn}/invocations"
 }
