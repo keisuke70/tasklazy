@@ -1,5 +1,5 @@
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
-import outputs from "@/amplify_outputs.json";
+import outputs from "../../../packages/shared_auth/amplify_outputs.json";
 import { cookies } from "next/headers";
 import { getCurrentUser } from "@aws-amplify/auth/server";
 export const { runWithAmplifyServerContext } = createServerRunner({
