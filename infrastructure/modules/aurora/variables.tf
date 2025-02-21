@@ -8,8 +8,3 @@ variable "db_security_group_id" {
   type        = string
 }
 
-# Optional: if you plan to use it later in this module.
-variable "vpc_id" {
-  description = "The VPC ID for the Aurora cluster."
-  type        = string
-}
