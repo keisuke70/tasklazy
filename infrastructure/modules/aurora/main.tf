@@ -14,7 +14,7 @@ resource "aws_db_subnet_group" "main" {
 resource "aws_rds_cluster" "main" {
   cluster_identifier      = "myapp-db-cluster"
   engine                  = "aurora-postgresql"
-  engine_version          = "15.3"
+  engine_version          = "15.4"
   database_name           = "mydb"
   master_username         = "dbadmin"
   master_password         = random_password.db_password.result
