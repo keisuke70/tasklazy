@@ -5,7 +5,6 @@ module "networking" {
 
 module "aurora" {
   source               = "../../modules/aurora"
-  vpc_id               = module.networking.vpc_id
   private_subnet_ids   = module.networking.private_subnet_ids
   db_security_group_id = module.networking.db_security_group_id
 }
