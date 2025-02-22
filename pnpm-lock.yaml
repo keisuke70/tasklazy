@@ -232,6 +232,19 @@ importers:
         specifier: ^0.17.18
         version: 0.17.19
 
+  packages/lambdas/fetch-task-handler:
+    dependencies:
+      pg:
+        specifier: ^8.13.3
+        version: 8.13.3
+    devDependencies:
+      esbuild:
+        specifier: ^0.17.18
+        version: 0.17.19
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+
   packages/lambdas/parse-task-handler:
     dependencies:
       '@aws-sdk/client-sqs':
