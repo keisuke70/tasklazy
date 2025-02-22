@@ -1,5 +1,5 @@
 import { fetchAuthSession } from "@aws-amplify/auth/server";
-import { runWithAmplifyServerContext } from "lib/amplify-server-util";
+import { runWithAmplifyServerContext } from "@/lib/amplifyServerUtil";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {

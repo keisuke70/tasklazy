@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronsUpDown, LogOut, User } from "lucide-react";
+import { Logout } from "./Logout";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,9 +45,12 @@ export function UserProfile() {
           <User className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+        <DropdownMenuItem asChild>
+          <div>
+            <LogOut className="mr-2 h-4 w-4" />
+            <Logout />
+          </div>
+   
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

@@ -7,9 +7,13 @@ import GenerateScheduleButton from "@/components/GenerateScheduleButton";
 import DailyScheduleView from "@/components/DailyScheduleView";
 import { Task, ScheduledBlock, RepeatOption } from "@/lib/definition";
 import { useSidebar } from "@/components/ui/sidebar";
-
+import { useUser } from "@/context/UserContext";
 export default function HomePage() {
-  // State for tasks (in a real app, you may fetch this from an API)
+
+
+  const user = useUser();
+  console.log(user);
+   
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: "task1",

@@ -2,10 +2,9 @@
   "name": "parse-task-handler",
   "version": "1.0.0",
   "description": "Lambda function to parse task descriptions using Gemini API and send results to SQS",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "mkdir -p dist && npx esbuild index.js --bundle --minify --platform=node --target=node20 --outfile=dist/index.js && cd dist && zip -r index.zip index.js && cd -"
+    "build": "mkdir -p dist && npx esbuild index.ts --bundle --minify --platform=node --target=node20 --outfile=dist/index.js && cd dist && zip -r index.zip index.js && cd -"
   },
   "keywords": [
     "aws",
@@ -19,10 +18,11 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.749.0",
-    "node-fetch": "^3.3.2",
-    "@google/generative-ai": "^0.21.0"
+    "@google/generative-ai": "^0.22.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "esbuild": "^0.17.18"
+    "esbuild": "^0.17.18",
+    "typescript": "^5.7.3"
   }
 }
