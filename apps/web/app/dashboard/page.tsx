@@ -8,11 +8,11 @@ import DailyScheduleView from "@/components/DailyScheduleView";
 import { Task, ScheduledBlock, RepeatOption } from "@/lib/definition";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useUser } from "@/context/UserContext";
+
+
 export default function HomePage() {
-
-
   const user = useUser();
-   
+
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: "task1",
@@ -43,30 +43,6 @@ export default function HomePage() {
       name: "Team Meeting",
       duration: 90, // 10:00 - 11:30
       dueDate: "2025-02-17",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-    {
-      id: "task5",
-      name: "Quick Email Check",
-      duration: 30, // 11:30 - 12:00
-      dueDate: "2025-02-15",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-    {
-      id: "task6",
-      name: "Quick Email Check",
-      duration: 30, // 11:30 - 12:00
-      dueDate: "2025-02-15",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-    {
-      id: "task7",
-      name: "Quick Email Check",
-      duration: 30,
-      dueDate: "2025-02-15",
       repeatRule: RepeatOption.None,
       isComplete: false,
     },
