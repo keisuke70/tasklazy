@@ -24,6 +24,10 @@ export const handler = async (
     if (!userId) {
       return {
         statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": "false",
+        },
         body: JSON.stringify({ error: "Missing userId" }),
       };
     }
@@ -45,12 +49,20 @@ export const handler = async (
 
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "false",
+      },
       body: JSON.stringify({ tasks }),
     };
   } catch (error: any) {
     console.error("Error fetching tasks:", error);
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "false",
+      },
       body: JSON.stringify({ error: error.message }),
     };
   }

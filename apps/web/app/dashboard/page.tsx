@@ -29,7 +29,7 @@ export default function HomePage() {
       try {
         // Replace with your actual API Gateway URL
         const response = await fetch(
-          `https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/fetch-task?userId=${userId}`
+          `https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/fetch-task?userId=8989294e-f071-70b4-7799-7e0ff01d9937`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");

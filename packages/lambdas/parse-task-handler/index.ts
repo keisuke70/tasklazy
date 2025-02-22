@@ -30,6 +30,10 @@ export const handler = async (
     if (!event.body) {
       return {
         statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": "false",
+        },
         body: JSON.stringify({ error: "Missing request body" }),
       };
     }
@@ -132,6 +136,10 @@ Task Description: ${taskDescription}
 
     return {
       statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "false",
+      },
       body: JSON.stringify({
         message: "Task parsed and queued successfully.",
       }),
@@ -140,6 +148,10 @@ Task Description: ${taskDescription}
     console.error("Error in parse-task lambda:", error);
     return {
       statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": "false",
+      },
       body: JSON.stringify({ error: (error as Error).message }),
     };
   }
