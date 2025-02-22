@@ -26,11 +26,14 @@ export default function TaskRegistrationPanel({
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/parse-task", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ taskDescription: taskInput }),
-      });
+      const response = await fetch(
+        "https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/parse-task",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ taskDescription: taskInput }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to parse tasks");
       }

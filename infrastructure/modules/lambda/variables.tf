@@ -27,3 +27,8 @@ variable "sqs_gemini_results_arn" {
   description = "The ARN of the SQS queue for Gemini results."
   type        = string
 }
+
+variable "api_gateway_execution_arn" {
+  description = "The API Gateway execution ARN used for Lambda permissions"
+  type        = string
+}

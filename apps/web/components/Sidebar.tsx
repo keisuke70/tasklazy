@@ -22,15 +22,15 @@ export function TaskManagementSidebar() {
   return (
     <Sidebar className="bg-background text-text border-r border-accent h-full">
       <SidebarHeader className="p-4 border-b border-accent">
-        <h1 className="text-2xl font-bold text-primary">TaskLazy</h1>
+        <h1 className="text-2xl pl-3 font-bold text-primary">TaskLazy</h1>
       </SidebarHeader>
-      <SidebarContent className="p-4">
-        <SidebarMenu className="flex flex-col space-y-4">
+      <SidebarContent className="p-4 mt-4">
+        <SidebarMenu className="flex flex-col space-y-6">
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton
                 asChild
-                className="flex items-center gap-3 w-full p-3 rounded-md transition-colors duration-200 hover:bg-primary hover:text-white"
+                className="flex items-center gap-3 w-full py-6 pl-3 rounded-md transition-colors duration-200 hover:bg-accent hover:text-white"
               >
                 <a href={item.href}>
                   <item.icon className="h-5 w-5" />
@@ -41,7 +41,7 @@ export function TaskManagementSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t border-accent">
+      <SidebarFooter className=" pt-8 mb-6 border-t border-accent">
         <UserProfile />
       </SidebarFooter>
     </Sidebar>

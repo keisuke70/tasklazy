@@ -11,47 +11,40 @@ import { useUser } from "@/context/UserContext";
 
 
 export default function HomePage() {
-  const user = useUser();
-
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: "task1",
-      name: "Finish Project Report",
-      duration: 45, // 08:00 - 08:45
-      dueDate: "2025-02-15",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-    {
-      id: "task2",
-      name: "Grocery Shopping",
-      duration: 60, // 08:45 - 09:15
-      dueDate: "2025-02-16",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-    {
-      id: "task3",
-      name: "Call Client",
-      duration: 45, // 09:15 - 10:00
-      dueDate: "2025-02-16",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-    {
-      id: "task4",
-      name: "Team Meeting",
-      duration: 90, // 10:00 - 11:30
-      dueDate: "2025-02-17",
-      repeatRule: RepeatOption.None,
-      isComplete: false,
-    },
-  ]);
-
-  // State for scheduled blocks (could also come from an API)
+  const userId = useUser()?.userId!;
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [scheduledBlocks, setScheduledBlocks] = useState<ScheduledBlock[]>([]);
   const { setOpen } = useSidebar();
   const [editDetails, setEditDetails] = useState(false);
+
+  useEffect(() => {
+    if (editDetails) {
+      setOpen(false);
+    }
+  }, [editDetails, setOpen]);
+
+  // Fetch tasks from your Lambda API Gateway endpoint
+  useEffect(() => {
+    async function fetchTasks() {
+      try {
+        // Replace with your actual API Gateway URL
+        const response = await fetch(
+          `https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/fetch-task?userId=${userId}`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setTasks(data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    }
+
+    if (userId) {
+      fetchTasks();
+    }
+  }, [userId]);
 
   useEffect(() => {
     if (editDetails) {
