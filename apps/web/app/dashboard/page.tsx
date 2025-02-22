@@ -12,7 +12,6 @@ export default function HomePage() {
 
 
   const user = useUser();
-  console.log(user);
    
   const [tasks, setTasks] = useState<Task[]>([
     {

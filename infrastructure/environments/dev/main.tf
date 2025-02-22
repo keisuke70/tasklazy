@@ -28,4 +28,5 @@ module "api_gateway" {
   parse_task_lambda_arn        = module.lambda.parse_task_handler_arn
   generate_schedule_lambda_arn = module.lambda.vpc_handler_arn
   update_task_lambda_arn       = module.lambda.update_task_handler_arn
+  fetch_task_lambda_arn        = module.lambda.fetch_task_handler_arn
 }

@@ -22,3 +22,8 @@ output "db_init_handler_arn" {
   description = "ARN of the DB initialization Lambda."
   value       = aws_lambda_function.db_init_handler.arn
 }
+
+output "fetch_task_handler_arn" {
+  description = "ARN of the fetch task handler Lambda (for /api/fetch-task)."
+  value       = aws_lambda_function.fetch_task_handler.arn
+}
