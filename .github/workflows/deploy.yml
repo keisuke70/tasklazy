@@ -57,6 +57,12 @@ jobs:
           npm install
           npm run build
 
+      - name: Build Fetch Task Lambda
+        working-directory: packages/lambdas/fetch-task-handler
+        run: |
+          npm install
+          npm run build
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:

@@ -18,7 +18,7 @@ export default function Page() {
         <p style={{ margin: "5px 0 15px", fontSize: "14px", color: "#666" }}>
           Flexible, adaptive scheduling for real life.
         </p>
-        <Link href="/dashboard">
+        <Link href="/signup">
           <Button>Log In</Button>
         </Link>
       </header>
