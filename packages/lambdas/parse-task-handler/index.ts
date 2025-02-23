@@ -134,6 +134,8 @@ Task Description: ${taskDescription}
     });
     await sqsClient.send(command);
 
+    console.log("SQS message:", JSON.stringify(taskMessage));
+
     return {
       statusCode: 200,
       headers: {

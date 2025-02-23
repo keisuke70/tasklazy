@@ -19,7 +19,6 @@ export function UserProfile() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="w-full justify-start py-6">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/path/to/avatar.png" alt="John Doe" />
             <AvatarFallback>JD</AvatarFallback>
           </Avatar>
           <div className="flex flex-col items-start flex-1 overflow-hidden">
