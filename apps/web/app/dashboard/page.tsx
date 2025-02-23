@@ -9,6 +9,9 @@ import { Task, ScheduledBlock, RepeatOption } from "@/lib/definition";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useUser } from "@/context/UserContext";
 
+
+export const dynamic = "force-dynamic";
+
 export default function HomePage() {
   const userId = useUser()?.userId!;
   // console.log(useUser());
