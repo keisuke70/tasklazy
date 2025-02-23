@@ -177,7 +177,7 @@ export default function HomePage() {
         </div>
         <div className="flex justify-center mt-5">
           <div className="w-full ml-20">
-            <TaskRegistrationPanel onAddTask={handleAddTask} />
+            <TaskRegistrationPanel onAddTask={handleAddTask} userId={userId}/>
           </div>
           <div className="ml-3 mt-1">
             <GenerateScheduleButton

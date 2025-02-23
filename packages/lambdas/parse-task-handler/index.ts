@@ -1,4 +1,8 @@
-import { GoogleGenerativeAI, ObjectSchema, SchemaType } from "@google/generative-ai";
+import {
+  GoogleGenerativeAI,
+  ObjectSchema,
+  SchemaType,
+} from "@google/generative-ai";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 
@@ -26,8 +30,11 @@ interface SQSTaskMessage extends TaskInput {
 export const handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
+  console.log("Lambda function invoked. Event:", event);
+
   try {
     if (!event.body) {
+      console.log("No event body provided.");
       return {
         statusCode: 400,
         headers: {
@@ -40,9 +47,15 @@ export const handler = async (
 
     // Parse the incoming request.
     const requestBody: LambdaRequestBody = JSON.parse(event.body);
+    console.log("Parsed request body:", requestBody);
     const { taskDescription, userTimezone, userId } = requestBody;
 
     if (!taskDescription || !userTimezone || !userId) {
+      console.log("Missing required fields:", {
+        taskDescription,
+        userTimezone,
+        userId,
+      });
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "Missing required fields" }),
@@ -53,6 +66,7 @@ export const handler = async (
     const todayLocal = new Date().toLocaleDateString("en-CA", {
       timeZone: userTimezone,
     });
+    console.log("Computed todayLocal:", todayLocal);
 
     // Build the prompt for the generative AI with explicit instructions.
     const prompt = `
@@ -60,6 +74,7 @@ You are an expert task parser. Parse the following task description into a JSON 
 User's local date: "${todayLocal}".
 Task Description: ${taskDescription}
 `;
+    console.log("Generated prompt for generative AI:", prompt);
 
     const taskSchema: ObjectSchema = {
       description: "Structured task information",
@@ -72,7 +87,7 @@ Task Description: ${taskDescription}
         },
         duration: {
           type: SchemaType.INTEGER,
-          description: "Duration in minutes (default 0 if unspecified)",
+          description: "Duration in minutes (default 60 if unspecified)",
           nullable: false,
         },
         due_date: {
@@ -98,6 +113,7 @@ Task Description: ${taskDescription}
 
     // Instantiate the Gemini client using the SDK.
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
+    console.log("Instantiated GoogleGenerativeAI client.");
 
     // Get the generative model with a response configuration enforcing JSON output.
     const model = genAI.getGenerativeModel({
@@ -107,11 +123,15 @@ Task Description: ${taskDescription}
         responseSchema: taskSchema,
       },
     });
+    console.log("Generative AI model configured.");
 
     // Generate the structured content.
     const result = await model.generateContent(prompt);
     const responseText = await result.response.text();
+    console.log("Received response from generative AI:", responseText);
+
     const parsedTask: TaskInput = JSON.parse(responseText);
+    console.log("Parsed task from AI response:", parsedTask);
 
     // Build the SQS message, including the user ID (renamed to user_id) and setting is_complete to false.
     const taskMessage: SQSTaskMessage = {
@@ -123,6 +143,7 @@ Task Description: ${taskDescription}
       repeat_rule: parsedTask.repeat_rule || "None",
       is_complete: false,
     };
+    console.log("Constructed SQS task message:", taskMessage);
 
     // Publish the message to SQS.
     const sqsClient = new SQSClient({
@@ -132,9 +153,12 @@ Task Description: ${taskDescription}
       QueueUrl: process.env.SQS_GEMINI_RESULTS_URL as string,
       MessageBody: JSON.stringify(taskMessage),
     });
+    console.log(
+      "Sending message to SQS. QueueUrl:",
+      process.env.SQS_GEMINI_RESULTS_URL
+    );
     await sqsClient.send(command);
-
-    console.log("SQS message:", JSON.stringify(taskMessage));
+    console.log("Message sent to SQS successfully.");
 
     return {
       statusCode: 200,

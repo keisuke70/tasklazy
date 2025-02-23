@@ -10,10 +10,12 @@ import { Task } from "@/lib/definition";
 
 interface TaskRegistrationPanelProps {
   onAddTask: (newTask: Task) => void;
+  userId: string;
 }
 
 export default function TaskRegistrationPanel({
   onAddTask,
+  userId,
 }: TaskRegistrationPanelProps) {
   const [taskInput, setTaskInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,12 +28,18 @@ export default function TaskRegistrationPanel({
 
     setIsLoading(true);
     try {
+      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      console.log("User timezone:", userTimezone);
       const response = await fetch(
         "https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/parse-task",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ taskDescription: taskInput }),
+          body: JSON.stringify({
+            taskDescription: taskInput,
+            userTimezone, // using the resolved timezone
+            userId, // provided from your frontend context
+          }),
         }
       );
       if (!response.ok) {
