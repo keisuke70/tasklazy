@@ -40,12 +40,19 @@ export const handler = async (
         is_complete,
       } = parsedBody;
 
-      // Prepare the SQL query and parameters.
-      const queryText = `
-        INSERT INTO tasks (user_id, name, duration, due_date, reminder_time, repeat_rule, is_complete, priority)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, null)
-      `;
-      const queryParams = [
+      const upsertUserQuery = `
+    INSERT INTO users (id, stripe_customer_id)
+    VALUES ($1, NULL)
+    ON CONFLICT (id) DO NOTHING;
+  `;
+      console.log("Executing upsert for user_id:", user_id);
+      await client.query(upsertUserQuery, [user_id]);
+
+      const taskInsertQuery = `
+    INSERT INTO tasks (user_id, name, duration, due_date, reminder_time, repeat_rule, is_complete, priority)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, null);
+  `;
+      const taskQueryParams = [
         user_id,
         name,
         duration,
@@ -55,11 +62,13 @@ export const handler = async (
         is_complete,
       ];
 
-      console.log("Executing INSERT query with parameters:", queryParams);
-      const result = await client.query(queryText, queryParams);
-      console.log("Insert query result:", result);
+      console.log(
+        "Executing INSERT query for task with parameters:",
+        taskQueryParams
+      );
+      await client.query(taskInsertQuery, taskQueryParams);
     }
-
+    
     console.log("All records processed. Closing database connection.");
     await client.end();
     console.log("Database connection closed. Returning success response.");

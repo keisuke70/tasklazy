@@ -29,7 +29,7 @@ export default function TaskIcons({ task, formatDuration }: TaskIconsProps) {
           {formatDuration(task.duration)}
         </div>
       )}
-      {task.reminderTime && (
+      {task.reminder_time && (
         <div className="flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -37,10 +37,10 @@ export default function TaskIcons({ task, formatDuration }: TaskIconsProps) {
             </TooltipTrigger>
             <TooltipContent>Reminder</TooltipContent>
           </Tooltip>
-          <FormattedDateTime isoString={task.reminderTime} />
+          <FormattedDateTime isoString={task.reminder_time} />
         </div>
       )}
-      {task.repeatRule && task.repeatRule !== RepeatOption.None && (
+      {task.repeat_rule && task.repeat_rule !== RepeatOption.None && (
         <div className="flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -48,10 +48,10 @@ export default function TaskIcons({ task, formatDuration }: TaskIconsProps) {
             </TooltipTrigger>
             <TooltipContent>Repeat</TooltipContent>
           </Tooltip>
-          {task.repeatRule}
+          {task.repeat_rule}
         </div>
       )}
-      {task.dueDate && (
+      {task.due_date && (
         <div className="flex items-center gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -59,7 +59,7 @@ export default function TaskIcons({ task, formatDuration }: TaskIconsProps) {
             </TooltipTrigger>
             <TooltipContent>Due Date</TooltipContent>
           </Tooltip>
-          <FormattedDateTime isoString={task.dueDate} />
+          <FormattedDateTime isoString={task.due_date} />
         </div>
       )}
     </div>

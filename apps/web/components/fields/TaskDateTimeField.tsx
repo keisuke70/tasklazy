@@ -5,7 +5,7 @@ import React from "react";
 import { DateTimePicker24h } from "@/components/ui/DateTimePicker24h";
 
 interface TaskDateTimeFieldProps {
-  value?: string;
+  value: string | null;
   onChange: (value: string) => void;
 }
 

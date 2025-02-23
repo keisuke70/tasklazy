@@ -11,6 +11,7 @@ import { useUser } from "@/context/UserContext";
 
 export default function HomePage() {
   const userId = useUser()?.userId!;
+  // console.log(useUser());
   const [tasks, setTasks] = useState<Task[]>([]);
   const [scheduledBlocks, setScheduledBlocks] = useState<ScheduledBlock[]>([]);
   const { setOpen } = useSidebar();

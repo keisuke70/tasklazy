@@ -12,7 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { parse, format } from "date-fns";
 
 interface TaskDateFieldProps {
-  value?: string;
+  value: string | null;
   onChange: (value: string) => void;
 }
 

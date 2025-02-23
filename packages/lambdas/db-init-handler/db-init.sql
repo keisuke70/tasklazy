@@ -7,7 +7,7 @@ CREATE TYPE repeat_option AS ENUM ('None', 'Daily', 'Weekly', 'Monthly');
 -- Optional users table for storing additional business data.
 CREATE TABLE users (
   id UUID PRIMARY KEY,  -- This will be the Cognito "sub"
-  name VARCHAR(255) NOT NULL,
+  -- name VARCHAR(255) NOT NULL,
   stripe_customer_id VARCHAR(255)
 );
 

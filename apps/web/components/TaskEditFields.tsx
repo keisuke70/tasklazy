@@ -28,26 +28,26 @@ export default function TaskEditFields({
       </TableCell>
       <TableCell>
         <TaskDateTimeField
-          value={task.reminderTime}
-          onChange={(value) => handleFieldChange("reminderTime", value)}
+          value={task.reminder_time}
+          onChange={(value) => handleFieldChange("reminder_time", value ?? null)}
         />
       </TableCell>
       <TableCell>
         <TaskRepeatField
-          value={task.repeatRule}
-          onChange={(value) => handleFieldChange("repeatRule", value)}
+          value={task.repeat_rule as RepeatOption}
+          onChange={(value) => handleFieldChange("repeat_rule", value as RepeatOption)}
         />
       </TableCell>
       <TableCell
         className={
-          task.dueDate && isPast(new Date(task.dueDate)) && !task.isComplete
+          task.due_date && isPast(new Date(task.due_date)) && !task.is_complete
             ? "text-red-500"
             : ""
         }
       >
         <TaskDateField
-          value={task.dueDate}
-          onChange={(value) => handleFieldChange("dueDate", value)}
+          value={task.due_date}
+          onChange={(value) => handleFieldChange("due_date", value ?? null)}
         />
       </TableCell>
     </>

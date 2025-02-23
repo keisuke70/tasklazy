@@ -84,7 +84,7 @@ export default function TaskRow({
       <UiTableRow className="hover:bg-[#f9f9f9]">
         <TableCell>
           <Checkbox
-            checked={task.isComplete}
+            checked={task.is_complete}
             onCheckedChange={() => onToggleComplete(task.id)}
             className="ml-3"
           />

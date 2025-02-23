@@ -23,6 +23,7 @@ export function TaskEditModalContent({
   task,
   handleFieldChange,
 }: TaskEditModalContentProps) {
+  const newLocal = "due_date";
   return (
     <DialogContent>
       <DialogHeader>
@@ -59,8 +60,8 @@ export function TaskEditModalContent({
               Repeat
             </label>
             <TaskRepeatField
-              value={task.repeatRule}
-              onChange={(value) => handleFieldChange("repeatRule", value)}
+              value={task.repeat_rule}
+              onChange={(value) => handleFieldChange("repeat_rule", value)}
             />
           </div>
         </div>
@@ -71,8 +72,8 @@ export function TaskEditModalContent({
               Reminder
             </label>
             <TaskDateTimeField
-              value={task.reminderTime}
-              onChange={(value) => handleFieldChange("reminderTime", value)}
+              value={task.reminder_time}
+              onChange={(value) => handleFieldChange("reminder_time", value)}
             />
           </div>
           <div className="flex flex-col gap-2">
@@ -81,8 +82,8 @@ export function TaskEditModalContent({
               Due Date
             </label>
             <TaskDateField
-              value={task.dueDate}
-              onChange={(value) => handleFieldChange("dueDate", value)}
+              value={task.due_date}
+              onChange={(value) => handleFieldChange(newLocal, value)}
             />
           </div>
         </div>

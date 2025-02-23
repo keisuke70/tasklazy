@@ -6,6 +6,8 @@ export const { runWithAmplifyServerContext } = createServerRunner({
   config: outputs,
 });
 
+export const dynamic = "force-dynamic";
+
 export async function GetAuthCurrentUserServer() {
   try {
     const currentUser = await runWithAmplifyServerContext({
