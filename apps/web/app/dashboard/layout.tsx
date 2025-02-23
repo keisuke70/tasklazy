@@ -6,6 +6,8 @@ import { GetAuthCurrentUserServer } from "@/lib/amplifyServerUtil";
 import { UserProvider } from "@/context/UserContext";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function DashboardLayout({
   children,
 }: {
