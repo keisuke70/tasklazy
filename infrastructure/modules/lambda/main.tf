@@ -26,6 +26,7 @@ resource "aws_lambda_function" "parse_task_handler" {
   role             = aws_iam_role.lambda_exec.arn
   handler          = "index.handler"
   runtime          = "nodejs20.x"
+  timeout          = 12
 
   environment {
     variables = {

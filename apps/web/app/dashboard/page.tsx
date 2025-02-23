@@ -9,7 +9,6 @@ import { Task, ScheduledBlock, RepeatOption } from "@/lib/definition";
 import { useSidebar } from "@/components/ui/sidebar";
 import { useUser } from "@/context/UserContext";
 
-
 export default function HomePage() {
   const userId = useUser()?.userId!;
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -27,15 +26,14 @@ export default function HomePage() {
   useEffect(() => {
     async function fetchTasks() {
       try {
-        // Replace with your actual API Gateway URL
         const response = await fetch(
-          `https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/fetch-task?userId=8989294e-f071-70b4-7799-7e0ff01d9937`
+          `https://s6finx4jva.execute-api.us-west-1.amazonaws.com/dev/fetch-task?userId=${userId}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        setTasks(data);
+        setTasks(data.tasks); // Use the tasks property from the response object
       } catch (error) {
         console.error("Error fetching tasks:", error);
       }
@@ -52,6 +50,7 @@ export default function HomePage() {
       setOpen(false);
     }
   }, [editDetails, setOpen]);
+
   // Handler: when a user successfully parses+confirms a new task
   const handleAddTask = (newTask: Task) => {
     setTasks((prev) => [...prev, newTask]);
@@ -64,15 +63,16 @@ export default function HomePage() {
     );
   };
 
-  // Handler: toggle task completion
+  // Handler: toggle task completion using the updated property name `is_complete`
   const handleToggleComplete = (taskId: string) => {
     setTasks((prev) =>
       prev.map((t) =>
-        t.id === taskId ? { ...t, isComplete: !t.isComplete } : t
+        t.id === taskId ? { ...t, is_complete: !t.is_complete } : t
       )
     );
   };
 
+  // Handler: update task priority using null instead of undefined
   const handleSetPriority = (taskId: string, newPriority?: number) => {
     setTasks((prevTasks) => {
       const targetTask = prevTasks.find((t) => t.id === taskId);
@@ -81,12 +81,12 @@ export default function HomePage() {
       if (newPriority === undefined) {
         // Deselect: remove priority and adjust ordering.
         const oldPriority = targetTask.priority;
-        if (oldPriority === undefined) return prevTasks;
+        if (oldPriority === null) return prevTasks;
         return prevTasks.map((t) => {
           if (t.id === taskId) {
-            return { ...t, priority: undefined };
+            return { ...t, priority: null };
           }
-          if (t.priority !== undefined && t.priority > oldPriority) {
+          if (t.priority !== null && t.priority > oldPriority) {
             // Decrement priority for tasks that were selected later.
             return { ...t, priority: t.priority - 1 };
           }
@@ -95,7 +95,7 @@ export default function HomePage() {
       } else {
         // Select: assign a new priority based on the count of already selected tasks.
         const selectedCount = prevTasks.filter(
-          (t) => t.priority !== undefined
+          (t) => t.priority !== null
         ).length;
         const assignedPriority = selectedCount + 1;
         return prevTasks.map((t) =>
@@ -106,12 +106,9 @@ export default function HomePage() {
   };
 
   // Handler: Generate Schedule
-  // (In a real app, you'd call /api/generate-schedule, then update state with the response)
   const handleGenerateSchedule = async () => {
-    // 1. Filter tasks that have priority assigned (i.e. not undefined).
-    const prioritizedTasks = tasks.filter(
-      (task) => task.priority !== undefined
-    );
+    // 1. Filter tasks that have priority assigned (i.e. not null).
+    const prioritizedTasks = tasks.filter((task) => task.priority !== null);
 
     // Hard-coded scheduled blocks for demonstration:
     const newScheduledBlocks: ScheduledBlock[] = [
@@ -148,8 +145,8 @@ export default function HomePage() {
   };
 
   /**
-   * 1. The function that updates a block's `startTime` when dragged-and-dropped.
-   *    `taskId` is the block's ID, `newStartTime` is the new "HH:mm".
+   * The function that updates a block's `startTime` when dragged-and-dropped.
+   * `taskId` is the block's ID, `newStartTime` is the new "HH:mm".
    */
   const handleTaskMove = (taskId: string, newStartTime: string) => {
     setScheduledBlocks((prevBlocks) =>
@@ -190,7 +187,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Right Column: Daily Schedule View – flex-grow factor of 1 */}
+      {/* Right Column: Daily Schedule View */}
       <div className="w-2/6 p-2 mb-2">
         <DailyScheduleView
           scheduledBlocks={scheduledBlocks}

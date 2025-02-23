@@ -1,13 +1,15 @@
 export interface Task {
   id: string;
+  user_id: string;
   name: string;
-  duration: number; // Changed to number (minutes)
-  dueDate?: string; // ISO date string (YYYY-MM-DD)
-  reminderTime?: string; // ISO datetime string like
-  repeatRule: RepeatOption;
-  isComplete: boolean;
-  priority?: number;
+  duration: number;
+  due_date: string | null; // ISO date string (YYYY-MM-DD)
+  reminder_time: string | null; // ISO datetime string
+  repeat_rule: string;
+  is_complete: boolean;
+  priority: number | null;
 }
+
 
 export interface ScheduledBlock {
   taskId: string;
