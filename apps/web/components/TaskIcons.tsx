@@ -16,6 +16,7 @@ interface TaskIconsProps {
 }
 
 export default function TaskIcons({ task, formatDuration }: TaskIconsProps) {
+
   return (
     <div className="flex items-center gap-4 text-muted-foreground text-sm cursor-default">
       {task.duration && task.duration > 0 && (

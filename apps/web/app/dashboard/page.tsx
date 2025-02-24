@@ -16,7 +16,6 @@ export default function HomePage() {
   const [scheduledBlocks, setScheduledBlocks] = useState<ScheduledBlock[]>([]);
   const { setOpen } = useSidebar();
   const [editDetails, setEditDetails] = useState(false);
-  console.log("userId", userId);
   useEffect(() => {
     if (editDetails) {
       setOpen(false);

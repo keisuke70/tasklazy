@@ -1,5 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { Client } from "pg";
+import { Client, types } from "pg";
+
+// Set parsers to return raw string values for date and timestamp types
+types.setTypeParser(1082, (val) => val); // date
+types.setTypeParser(1114, (val) => val); // timestamp without time zone
 
 interface Task {
   id: string;
